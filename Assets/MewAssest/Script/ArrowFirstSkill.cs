@@ -46,7 +46,7 @@ public class ArrowFirstSkill : MonoBehaviour
         Transform enemy = other.transform;
         hitTargets.Add(enemy);
 
-        Transform next = FindNextEnemy(other.transform.position, other.transform);
+        Transform next = FindNextEnemy(other.transform);
 
         currentChain++;
 
@@ -67,7 +67,7 @@ public class ArrowFirstSkill : MonoBehaviour
         
     }
 
-    private Transform FindNextEnemy(Vector2 origin, Transform current)
+    private Transform FindNextEnemy(Transform current)
     {
         float minDistance = Mathf.Infinity;
         Transform next = null;
@@ -78,7 +78,7 @@ public class ArrowFirstSkill : MonoBehaviour
             if(enemy == current) continue;
             if(hitTargets.Contains(enemy)) continue;
 
-            float distance = Vector2.Distance(origin, enemy.transform.position);
+            float distance = Vector2.Distance(gameObject.transform.position, enemy.transform.position);
 
             if(distance > chainRange) continue;
 
