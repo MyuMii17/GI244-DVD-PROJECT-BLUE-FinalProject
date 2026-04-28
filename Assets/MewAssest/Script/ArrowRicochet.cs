@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.iOS;
 
-public class ArrowFirstSkill : MonoBehaviour
+
+public class ArrowRicochet : MonoBehaviour
 {
     public float mass = 1f;
     public float acceleration = 5f;
     public float linearDamp = 0f;
+    public float arrowDamage = 5f;
     private int maxChain = 3;
     private int chainRange = 20;
     private int currentChain = 0;
@@ -45,6 +44,12 @@ public class ArrowFirstSkill : MonoBehaviour
 
         Transform enemy = other.transform;
         hitTargets.Add(enemy);
+
+        EnemyDetail enemyDetail = other.GetComponent<EnemyDetail>();
+            if(enemyDetail != null)
+            {
+                enemyDetail.TakeDamage(arrowDamage);
+            }
 
         Transform next = FindNextEnemy(other.transform);
 

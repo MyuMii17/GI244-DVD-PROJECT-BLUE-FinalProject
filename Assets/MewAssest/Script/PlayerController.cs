@@ -10,23 +10,35 @@ public class PlayerController : MonoBehaviour
     public float mass = 1f;
     public float linearDamp = 5f;
     public float shootCooldown = 1f;
+    public float skillRicochetCooldown = 5f;
+    public float skillChargingCooldown = 6f;
     [Header("GameObject Setting")]
     public Camera cam;
     public GameObject arrowPrefeb;
     public GameObject arrowFirstSkillPrefeb;
     public GameObject arrowSecondSkillPrefeb;
     public Transform shootPos;
+    public Transform shootRotation;
     // Hidden Setting
     private float moveForce;
     private float nextShoot;
+    private float currentRicochetCooldown;
+    private float currentChargingCooldown;
     private float time;
+    private bool isChargeSuccess;
     private InputAction moveAction;
     private InputAction lookAction;
     private InputAction AttackAction;
     private Rigidbody2D rb;
+    private static PlayerController staticInstance;
+    public static PlayerController GetStatic()
+    {
+        return staticInstance;
+    }
 
     void Start()
     {
+        staticInstance = this;
         moveAction = InputSystem.actions.FindAction("Move");
         lookAction = InputSystem.actions.FindAction("look");
         AttackAction = InputSystem.actions.FindAction("Attack");
@@ -35,6 +47,8 @@ public class PlayerController : MonoBehaviour
         rb.linearDamping = linearDamp;
         moveForce = rb.mass * acceleration;
         nextShoot = 0;
+        currentRicochetCooldown = 0;
+        currentChargingCooldown = 0;
     }
 
     void Update()
@@ -46,13 +60,28 @@ public class PlayerController : MonoBehaviour
             CharacterShoot();
         }
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame && currentRicochetCooldown <= 0)
         {
-            FirstSkill();
+            RicochetSkill();
         }
-        else if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        else if (Keyboard.current.digit2Key.wasPressedThisFrame && currentChargingCooldown <= 0)
         {
-            SecondSkill();
+            this.enabled = false;
+            ChargeSkill();
+        }
+
+        if(currentRicochetCooldown > 0)
+        {
+            currentRicochetCooldown -= Time.deltaTime;
+        }   
+
+        if(currentChargingCooldown > 0 && isChargeSuccess)
+        {
+            currentChargingCooldown -= Time.deltaTime;
+        }
+        else
+        {
+            isChargeSuccess = false;
         }
 
     }
@@ -78,7 +107,7 @@ public class PlayerController : MonoBehaviour
         Vector2 direction = mouseWorld - transform.position;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        shootRotation.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
     private void CharacterShoot()
     {
@@ -89,20 +118,41 @@ public class PlayerController : MonoBehaviour
         );
         nextShoot = Time.time + shootCooldown;
     }
-    private void FirstSkill()
+    private void RicochetSkill()
     {
         Instantiate(
             arrowFirstSkillPrefeb,
             shootPos.position,
             shootPos.rotation
         );
+        currentRicochetCooldown = skillRicochetCooldown;
     }
-    private void SecondSkill()
+    private void ChargeSkill()
     {
         Instantiate(
             arrowSecondSkillPrefeb,
             shootPos.position,
             shootPos.rotation
         );
+        currentChargingCooldown = skillChargingCooldown;
+    }
+    public bool isUseCharging()
+    {
+        if (GetStatic().currentChargingCooldown > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    void ChargeSkillCooldown()
+    {
+        isChargeSuccess = true;
+    }
+    void OnEnable()
+    {
+        ArrowChargingSkill.ChargeSuccess += ChargeSkillCooldown;
     }
 }
