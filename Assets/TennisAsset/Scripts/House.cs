@@ -2,8 +2,14 @@ using UnityEngine;
 
 public class House : BuildingClass
 {
-    private void Awake()
+   
+    override public void Output()
     {
-        gameObject.SetActive(false);
+        base.Output();
+        if (this.IsBuilt)
+        {
+            Resource.GetInstance().Citizen += ProduceAmount;
+        }
+        
     }
 }
