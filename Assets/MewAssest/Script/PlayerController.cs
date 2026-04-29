@@ -27,14 +27,21 @@ public class PlayerController : MonoBehaviour
     private float moveForce;
     private float nextShoot;
     private float currentRicochetCooldown;
-    private float currentChargingCooldown;
     private float time;
+    [SerializeField] private GameObject shootCharge;
     private InputAction moveAction;
     private InputAction lookAction;
     private InputAction AttackAction;
     private InputAction ChargeAction;
     private Rigidbody2D rb;
+    private PoolManager poolManager;
     private static PlayerController staticInstance;
+    private Coroutine OnChargingCoroutine;
+    public bool isCanCharge;
+    public float chargeAccelerator;
+    public float chargeDamage;
+    public float currentChargeAccel;
+    public float currentChargeDamage;
     public static PlayerController GetStatic()
     {
         return staticInstance;
@@ -43,6 +50,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         staticInstance = this;
+        isCanCharge = true;
+
+        poolManager = PoolManager.GetStatic();
         moveAction = InputSystem.actions.FindAction("Move");
         lookAction = InputSystem.actions.FindAction("look");
         AttackAction = InputSystem.actions.FindAction("Attack");
@@ -53,7 +63,6 @@ public class PlayerController : MonoBehaviour
         moveForce = rb.mass * acceleration;
         nextShoot = 0;
         currentRicochetCooldown = 0;
-        currentChargingCooldown = 0;
     }
 
     void Update()
@@ -73,20 +82,27 @@ public class PlayerController : MonoBehaviour
         if (ChargeAction.IsPressed())
         {
             isPlayerCharging = true;
-            if (isChargeSpawn == false)
-            {
-                isChargeSpawn = true;
-                
-                Instantiate(
-                    arrowSecondSkillPrefeb,
-                    shootPos.position,
-                    shootPos.rotation
-                );
-            }
+            shootCharge.SetActive(true);
+            StartCoroutine(OnCharge());
         }
         else if(!ChargeAction.IsPressed())
         {
             isPlayerCharging = false;
+            shootCharge.SetActive(false);
+            shootCharge.transform.localScale = new Vector3(0.1f, 0.1f, 0);
+
+            if (isChargeSpawn == true)
+            {
+                currentChargeAccel = chargeAccelerator;
+                currentChargeDamage = chargeDamage;
+                isChargeSpawn = false;
+                Instantiate(arrowSecondSkillPrefeb,shootPos.position,shootPos.rotation);
+            }
+            else if (isChargeSpawn == false)
+            {
+                chargeAccelerator = 0;
+                chargeDamage = 0;
+            }
         }
 
         if(currentRicochetCooldown > 0)
@@ -94,6 +110,34 @@ public class PlayerController : MonoBehaviour
             currentRicochetCooldown -= Time.deltaTime;
         }   
 
+    }
+
+    IEnumerator OnCharge()
+    {
+        if(isCanCharge == false) yield break;
+        Vector3 scale = shootCharge.transform.localScale;
+        isCanCharge = false;
+
+        scale += new Vector3(0.8f * Time.deltaTime, 0.8f * Time.deltaTime, 0); 
+        scale.x = Mathf.Clamp(scale.x, 0.1f,1.5f);
+        scale.y = Mathf.Clamp(scale.y, 0.1f,1.5f);
+
+        shootCharge.transform.localScale = scale;
+
+        float accel = chargeAccelerator;
+        accel += 8f * Time.deltaTime;
+        accel = Mathf.Clamp(accel, 0.1f,2f);
+        chargeAccelerator = accel;
+
+        float damage = chargeDamage;
+        damage += 8f * Time.deltaTime;
+        damage = Mathf.Clamp(damage, 0.1f,15f);
+        chargeDamage = damage;
+
+        yield return null;
+        
+        isCanCharge = true;
+        isChargeSpawn = true;
     }
     
     void FixedUpdate()

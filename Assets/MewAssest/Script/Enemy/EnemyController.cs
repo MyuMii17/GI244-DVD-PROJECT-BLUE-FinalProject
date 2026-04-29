@@ -78,7 +78,7 @@ public class EnemyController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        
+
         rb.linearVelocity = Vector2.zero;
 
         isHasHit = false; 

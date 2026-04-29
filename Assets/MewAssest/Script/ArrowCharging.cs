@@ -17,10 +17,12 @@ public class ArrowChargingSkill : MonoBehaviour
     private Rigidbody2D rb;
     public bool canShoot;
     private BoxCollider2D bc;
-    private Coroutine OnChargingCoroutine;
+    private Coroutine OnArrowChargingCoroutine;
     private PlayerController playerController;
+    private PoolManager poolManager;
     void Start()
     {
+        poolManager = PoolManager.GetStatic();
         playerController = PlayerController.GetStatic();
         bc = GetComponent<BoxCollider2D>();
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -34,49 +36,15 @@ public class ArrowChargingSkill : MonoBehaviour
         if(playerController.isPlayerCharging == true)
         {
             isCanCharging = true;
-            if(OnChargingCoroutine == null)
+            if(OnArrowChargingCoroutine == null)
             {
-                OnChargingCoroutine = StartCoroutine(OnCharge());
+
             }
         }
         else
         {
             isCanCharging = false;
         }
-    }
-
-    IEnumerator OnCharge()
-    {
-        isCharging = true;
-        canShoot = false;
-
-        while (isCanCharging == true)
-        {
-            bc.enabled = false;
-            transform.localScale += new Vector3(arrowScale * Time.deltaTime, arrowScale * Time.deltaTime, 0f);
-            transform.position = PlayerController.GetStatic().shootPos.position;
-
-            acceleration += 5f * Time.deltaTime;
-            arrowForce = rb.mass * acceleration;
-
-            if(arrowForce >= maxArrowForce)
-            {
-                arrowForce = maxArrowForce;
-            }
-        }
-
-        if(isCanCharging == false)
-        {
-            bc.enabled = true;
-            isCharging = false;
-            canShoot = true;
-        }
-
-        yield return new WaitForSeconds(1);
-        
-        playerController.isChargeSpawn = false;
-        OnChargingCoroutine = null;
-        Destroy(gameObject,0.5f);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -97,10 +65,19 @@ public class ArrowChargingSkill : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (canShoot)
-        {
-            rb.AddForce(transform.right * arrowForce, ForceMode2D.Impulse);
-        }
+        StartCoroutine(onChargeSpawn());
+        Destroy(gameObject,2f);
+    }
+
+    IEnumerator onChargeSpawn()
+    {
+        acceleration = playerController.currentChargeAccel;
+        arrowForce = rb.mass * acceleration;
+        arrowDamage = playerController.currentChargeDamage;
+
+        rb.AddForce(transform.right * arrowForce, ForceMode2D.Impulse);
+
+        yield return null;
     }
 
 }
