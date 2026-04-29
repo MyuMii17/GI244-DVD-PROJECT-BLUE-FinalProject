@@ -3,5 +3,5 @@ using UnityEngine;
 
 public class FriendlyManager : MonoBehaviour
 {
-    public static List<Transform> friendlys = new List<Transform>();
+    public static HashSet<Transform> friendlys = new HashSet<Transform>();
 }

@@ -32,10 +32,12 @@ public class ArrowChargingSkill : MonoBehaviour
     {
         if(collision.CompareTag("Enemy"))
         {
-            EnemyDetail enemyDetail = collision.GetComponent<EnemyDetail>();
-            if(enemyDetail != null)
+            EnemyController enemyController = collision.GetComponent<EnemyController>();
+            if(enemyController != null)
             {
-                enemyDetail.TakeDamage(arrowDamage);
+                var dir = transform.position - enemyController.transform.position;
+                dir.Normalize();
+                enemyController.OnEnemyHit(arrowDamage,dir);
             }
         }
     }

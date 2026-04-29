@@ -20,10 +20,12 @@ public class Arrow : MonoBehaviour
     {
         if(collision.CompareTag("Enemy"))
         {
-            EnemyDetail enemy = collision.GetComponent<EnemyDetail>();
-            if(enemy != null)
+            EnemyController enemyController = collision.GetComponent<EnemyController>();
+            if(enemyController != null)
             {
-                enemy.TakeDamage(arrowDamage);
+                var dir = transform.position - enemyController.transform.position;
+                dir.Normalize();
+                enemyController.OnEnemyHit(arrowDamage,dir);
             }
             Destroy(gameObject);
         }

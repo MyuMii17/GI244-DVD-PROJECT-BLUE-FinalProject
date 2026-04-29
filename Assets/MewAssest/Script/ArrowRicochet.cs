@@ -45,10 +45,12 @@ public class ArrowRicochet : MonoBehaviour
         Transform enemy = other.transform;
         hitTargets.Add(enemy);
 
-        EnemyDetail enemyDetail = other.GetComponent<EnemyDetail>();
-            if(enemyDetail != null)
+        EnemyController enemyController = other.GetComponent<EnemyController>();
+            if(enemyController != null)
             {
-                enemyDetail.TakeDamage(arrowDamage);
+                var dir = transform.position - enemyController.transform.position;
+                dir.Normalize();
+                enemyController.OnEnemyHit(arrowDamage,dir);
             }
 
         Transform next = FindNextEnemy(other.transform);
