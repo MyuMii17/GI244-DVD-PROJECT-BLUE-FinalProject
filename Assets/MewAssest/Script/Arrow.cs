@@ -25,7 +25,9 @@ public class Arrow : MonoBehaviour
             {
                 var dir = transform.position - enemyController.transform.position;
                 dir.Normalize();
-                enemyController.OnEnemyHit(arrowDamage,dir);
+                
+                enemyController.isHasHit = true;
+                enemyController.OnEnemyHit(arrowDamage, dir);
             }
             Destroy(gameObject);
         }

@@ -48,6 +48,10 @@ public class FriendlyController : MonoBehaviour
             Vector2 dir = (target.position - transform.position).normalized;
             rb.linearVelocity = dir * moveForce;
         }
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
 
     }
     public void OnFriendlyHit(float damage , Vector2 dir)
@@ -106,19 +110,29 @@ public class FriendlyController : MonoBehaviour
         if (collision.gameObject.TryGetComponent(out EnemyController enemyController))
         {
             isClash = true;
-            isHasHit = true; 
+            isHasHit = true;
 
             var dir = gameObject.transform.position - enemyController.transform.position;
             dir.Normalize();
 
+            enemyController.isHasHit = true;
             enemyController.OnEnemyHit(damage, dir);
         }
     }
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+    }
+    
     void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
             isClash = false;
+        }
+        if(collision.gameObject.CompareTag("Arrow"))
+        {
+            isHasHit = true;
         }
     }
 }

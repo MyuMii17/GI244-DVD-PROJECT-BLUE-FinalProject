@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 559982322809944263}
   m_Layer: 0
   m_Name: Arrow03
-  m_TagString: Untagged
+  m_TagString: Arrow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 6250824962452396666}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.27526, y: -1.36798, z: 0}
-  m_LocalScale: {x: 0.14, y: 0.14, z: 0.14}
+  m_LocalPosition: {x: -10.313876, y: -8.608633, z: 0}
+  m_LocalScale: {x: 5.270867, y: 5.270867, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -61,7 +61,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3d81971219dd8a84aba36c884faebf07, type: 2}
+  - {fileID: 2100000, guid: 004b25acaae8cb94ab18d30547f4a8ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.695665, g: 0.58679235, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -180,5 +180,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArrowSecondSkill
   mass: 1
+  acceleration: 29.668137
   linearDamp: 0
   arrowDamage: 20
+  arrowForce: 0
+  arrowScale: 1
+  maxArrowForce: 15
+  isCharging: 0
+  canShoot: 1

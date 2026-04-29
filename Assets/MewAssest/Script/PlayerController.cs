@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public GameObject arrowSecondSkillPrefeb;
     public Transform shootPos;
     public Transform shootRotation;
+    public bool isCharging;
     // Hidden Setting
     private float moveForce;
     private float nextShoot;
@@ -29,7 +31,9 @@ public class PlayerController : MonoBehaviour
     private InputAction moveAction;
     private InputAction lookAction;
     private InputAction AttackAction;
+    private InputAction ChargeAction;
     private Rigidbody2D rb;
+    private Coroutine OnChargingCoroutine;
     private static PlayerController staticInstance;
     public static PlayerController GetStatic()
     {
@@ -42,6 +46,7 @@ public class PlayerController : MonoBehaviour
         moveAction = InputSystem.actions.FindAction("Move");
         lookAction = InputSystem.actions.FindAction("look");
         AttackAction = InputSystem.actions.FindAction("Attack");
+        ChargeAction = InputSystem.actions.FindAction("Charge");
         rb = gameObject.GetComponent<Rigidbody2D>();
         rb.mass = mass;
         rb.linearDamping = linearDamp;
@@ -64,10 +69,22 @@ public class PlayerController : MonoBehaviour
         {
             RicochetSkill();
         }
-        else if (Keyboard.current.digit2Key.wasPressedThisFrame && currentChargingCooldown <= 0)
+
+        if (ChargeAction.IsPressed())
         {
-            this.enabled = false;
-            ChargeSkill();
+            if(OnChargingCoroutine != null)
+            {
+                isCharging = true;
+            }
+            else
+            {
+                isCharging = true;
+                OnChargingCoroutine = StartCoroutine(OnCharge());
+            }
+        }
+        else if(!ChargeAction.IsPressed())
+        {
+            isCharging = false;
         }
 
         if(currentRicochetCooldown > 0)
@@ -84,6 +101,48 @@ public class PlayerController : MonoBehaviour
             isChargeSuccess = false;
         }
 
+    }
+    IEnumerator OnCharge()
+    {
+        var box = arrowSecondSkillPrefeb.GetComponent<BoxCollider2D>();
+        var arrowCharge = arrowSecondSkillPrefeb.GetComponent<ArrowChargingSkill>();
+
+        ChargeSkill();
+
+        arrowSecondSkillPrefeb.transform.localScale = new Vector3(0.8834218f,0.8834218f,0);
+
+        arrowCharge.isCharging = true;
+        arrowCharge.canShoot = false;
+
+        while (isCharging == true)
+        {
+
+            box.enabled = false;
+
+            arrowSecondSkillPrefeb.transform.localScale += new Vector3(arrowCharge.arrowScale * Time.deltaTime, arrowCharge.arrowScale * Time.deltaTime, 0f);
+            arrowSecondSkillPrefeb.transform.position = PlayerController.GetStatic().shootPos.position;
+
+            arrowCharge.acceleration += 2f * Time.deltaTime;
+
+            if(arrowCharge.arrowForce >= arrowCharge.maxArrowForce)
+            {
+                arrowCharge.arrowForce = arrowCharge.maxArrowForce;
+            }
+
+
+        }
+
+        if(isCharging == false)
+        {
+
+            box.enabled = true;
+            arrowCharge.isCharging = false;
+            arrowCharge.canShoot = true;
+        }
+
+        yield return new WaitForSeconds(1);
+        
+        OnChargingCoroutine = null;
     }
     void FixedUpdate()
     {
@@ -134,26 +193,6 @@ public class PlayerController : MonoBehaviour
             shootPos.position,
             shootPos.rotation
         );
-        currentChargingCooldown = skillChargingCooldown;
-    }
-    public bool isUseCharging()
-    {
-        if (GetStatic().currentChargingCooldown > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    void ChargeSkillCooldown()
-    {
-        isChargeSuccess = true;
-    }
-    void OnEnable()
-    {
-        ArrowChargingSkill.ChargeSuccess += ChargeSkillCooldown;
     }
 
 }

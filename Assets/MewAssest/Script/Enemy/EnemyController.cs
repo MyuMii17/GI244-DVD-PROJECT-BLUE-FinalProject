@@ -49,6 +49,10 @@ public class EnemyController : MonoBehaviour
             Vector2 dir = (target.position - transform.position).normalized;
             rb.linearVelocity = dir * moveForce;
         }
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
 
     }
     public void OnEnemyHit(float damage , Vector2 dir)
@@ -74,6 +78,7 @@ public class EnemyController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
+        
         rb.linearVelocity = Vector2.zero;
 
         isHasHit = false; 

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3491447621771100826}
   m_Layer: 0
   m_Name: Arrow01
-  m_TagString: Untagged
+  m_TagString: Arrow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -182,3 +182,4 @@ MonoBehaviour:
   mass: 1
   acceleration: 5
   linearDamp: 0
+  arrowDamage: 10
