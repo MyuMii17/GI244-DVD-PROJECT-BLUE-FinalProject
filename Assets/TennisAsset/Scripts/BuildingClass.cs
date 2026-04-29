@@ -24,6 +24,9 @@ public abstract class BuildingClass : MonoBehaviour
     public void Build()
     {
         if (this.IsBuilt) return;
+        if (Resource.GetInstance().Gold < GoldRequire || Resource.GetInstance().Food < FoodRequire) return;
+        Resource.GetInstance().Gold -= GoldRequire;
+        Resource.GetInstance().Food -= FoodRequire;
         gameObject.SetActive(true);
         this.IsBuilt = true;
     }

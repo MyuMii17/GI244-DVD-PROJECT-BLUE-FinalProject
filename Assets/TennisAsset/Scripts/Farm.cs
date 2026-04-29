@@ -2,15 +2,11 @@ using UnityEngine;
 
 public class Farm : BuildingClass
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    override public void Output()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (this.IsBuilt)
+        {
+            Resource.GetInstance().Food += ProduceAmount;
+        }
     }
 }

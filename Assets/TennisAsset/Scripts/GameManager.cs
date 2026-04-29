@@ -15,12 +15,15 @@ public class GameManager : MonoBehaviour
     {
         InitAllBuilding();
         inputAction = InputSystem.actions.FindAction("Jump");
+        
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        Resource.GetInstance().Gold = 500;
+        Resource.GetInstance().Food = 50;
+        Resource.GetInstance().Citizen = 20;
     }
 
     // Update is called once per frame
@@ -30,18 +33,26 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("House: " + buildingList[0].IsBuilt  + "Gold: " + Resource.GetInstance().Gold + "Citizen: " + Resource.GetInstance().Citizen);
             Debug.Log("Produce: " + buildingList[0].ProduceAmount);
-            buildingList[0].Output();
+            BuildingsOuput();
         }
     }
 
 
     void InitAllBuilding()
     {
-        buildingList[0].Init(100, 50, 10, false);
-        buildingList[1].Init(150, 100, 20, false);
-        buildingList[2].Init(200, 150, 30, false);
-        buildingList[3].Init(250, 200, 40, false);
-        buildingList[4].Init(300, 250, 50, false);
+        buildingList[0].Init(50, 10, 10, false);
+        buildingList[1].Init(150, 20, 20, false);
+        buildingList[2].Init(20, 10, 30, false);
+        buildingList[3].Init(100, 30, 40, false);
+        buildingList[4].Init(150, 20, 50, false);
+    }
+
+    void BuildingsOuput()
+    {
+       foreach(var building in buildingList)
+        {
+            building.Output();
+        }
     }
 
 
