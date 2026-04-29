@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Data.Common;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public float shootCooldown = 1f;
     public float skillRicochetCooldown = 5f;
     public float skillChargingCooldown = 6f;
+    public bool isChargeSpawn;
     [Header("GameObject Setting")]
     public Camera cam;
     public GameObject arrowPrefeb;
@@ -20,20 +22,18 @@ public class PlayerController : MonoBehaviour
     public GameObject arrowSecondSkillPrefeb;
     public Transform shootPos;
     public Transform shootRotation;
-    public bool isCharging;
+    public bool isPlayerCharging;
     // Hidden Setting
     private float moveForce;
     private float nextShoot;
     private float currentRicochetCooldown;
     private float currentChargingCooldown;
     private float time;
-    private bool isChargeSuccess;
     private InputAction moveAction;
     private InputAction lookAction;
     private InputAction AttackAction;
     private InputAction ChargeAction;
     private Rigidbody2D rb;
-    private Coroutine OnChargingCoroutine;
     private static PlayerController staticInstance;
     public static PlayerController GetStatic()
     {
@@ -72,19 +72,21 @@ public class PlayerController : MonoBehaviour
 
         if (ChargeAction.IsPressed())
         {
-            if(OnChargingCoroutine != null)
+            isPlayerCharging = true;
+            if (isChargeSpawn == false)
             {
-                isCharging = true;
-            }
-            else
-            {
-                isCharging = true;
-                OnChargingCoroutine = StartCoroutine(OnCharge());
+                isChargeSpawn = true;
+                
+                Instantiate(
+                    arrowSecondSkillPrefeb,
+                    shootPos.position,
+                    shootPos.rotation
+                );
             }
         }
         else if(!ChargeAction.IsPressed())
         {
-            isCharging = false;
+            isPlayerCharging = false;
         }
 
         if(currentRicochetCooldown > 0)
@@ -92,58 +94,8 @@ public class PlayerController : MonoBehaviour
             currentRicochetCooldown -= Time.deltaTime;
         }   
 
-        if(currentChargingCooldown > 0 && isChargeSuccess)
-        {
-            currentChargingCooldown -= Time.deltaTime;
-        }
-        else
-        {
-            isChargeSuccess = false;
-        }
-
     }
-    IEnumerator OnCharge()
-    {
-        var box = arrowSecondSkillPrefeb.GetComponent<BoxCollider2D>();
-        var arrowCharge = arrowSecondSkillPrefeb.GetComponent<ArrowChargingSkill>();
-
-        ChargeSkill();
-
-        arrowSecondSkillPrefeb.transform.localScale = new Vector3(0.8834218f,0.8834218f,0);
-
-        arrowCharge.isCharging = true;
-        arrowCharge.canShoot = false;
-
-        while (isCharging == true)
-        {
-
-            box.enabled = false;
-
-            arrowSecondSkillPrefeb.transform.localScale += new Vector3(arrowCharge.arrowScale * Time.deltaTime, arrowCharge.arrowScale * Time.deltaTime, 0f);
-            arrowSecondSkillPrefeb.transform.position = PlayerController.GetStatic().shootPos.position;
-
-            arrowCharge.acceleration += 2f * Time.deltaTime;
-
-            if(arrowCharge.arrowForce >= arrowCharge.maxArrowForce)
-            {
-                arrowCharge.arrowForce = arrowCharge.maxArrowForce;
-            }
-
-
-        }
-
-        if(isCharging == false)
-        {
-
-            box.enabled = true;
-            arrowCharge.isCharging = false;
-            arrowCharge.canShoot = true;
-        }
-
-        yield return new WaitForSeconds(1);
-        
-        OnChargingCoroutine = null;
-    }
+    
     void FixedUpdate()
     {
         if (moveAction.IsPressed())
@@ -185,14 +137,6 @@ public class PlayerController : MonoBehaviour
             shootPos.rotation
         );
         currentRicochetCooldown = skillRicochetCooldown;
-    }
-    private void ChargeSkill()
-    {
-        Instantiate(
-            arrowSecondSkillPrefeb,
-            shootPos.position,
-            shootPos.rotation
-        );
     }
 
 }
