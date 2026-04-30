@@ -10,6 +10,7 @@ public class FriendlyController : MonoBehaviour
     public float linearDamp = 0f;
     private float moveForce;
     public float maxHealth = 100f;
+    public float currentHealth;
     public float currentDamageRecived;
     public float damage = 10;
     public bool isHasHit;
@@ -25,6 +26,8 @@ public class FriendlyController : MonoBehaviour
         rb.mass = mass;
         rb.linearDamping = linearDamp;
         moveForce = rb.mass * acceleration;
+
+        currentHealth = maxHealth;
     }
     void Update()
     {
@@ -68,6 +71,7 @@ public class FriendlyController : MonoBehaviour
     {
 
         currentDamageRecived += damage;
+        currentHealth-= damage;
 
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);

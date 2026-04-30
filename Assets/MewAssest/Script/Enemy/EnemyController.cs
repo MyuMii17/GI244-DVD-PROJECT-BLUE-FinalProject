@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour
     public float linearDamp = 0f;
     private float moveForce;
     public float maxHealth = 100f;
+    public float currentHealth;
     public float currentDamageRecived;
     public float damage = 10;
     public bool isHasHit;
@@ -26,6 +27,7 @@ public class EnemyController : MonoBehaviour
         rb.mass = mass;
         rb.linearDamping = linearDamp;
         moveForce = rb.mass * acceleration;
+        currentHealth = maxHealth;
     }
     void Update()
     {
@@ -68,6 +70,7 @@ public class EnemyController : MonoBehaviour
     {
 
         currentDamageRecived += damage;
+        currentHealth -= damage;
         
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);
@@ -116,6 +119,18 @@ public class EnemyController : MonoBehaviour
             dir.Normalize();
 
             friendlyController.OnFriendlyHit(damage, dir);
+        }
+
+        if (collision.gameObject.TryGetComponent(out PlayerController playerController))    
+        {
+            isClash = true;
+            isHasHit = true; 
+
+            var dir = gameObject.transform.position - playerController.transform.position;
+            dir.Normalize();
+
+            playerController.isHasHit = true;
+            playerController.OnPlayerHit(damage, dir);
         }
     }
     void OnCollisionExit2D(Collision2D collision)

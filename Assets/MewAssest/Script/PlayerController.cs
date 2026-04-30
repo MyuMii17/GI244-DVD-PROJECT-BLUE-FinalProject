@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Basic Character Setting")]
+    public float maxHealth;
+    public float currentHealth;
     public float acceleration = 10f;
     public float mass = 1f;
     public float linearDamp = 5f;
@@ -42,15 +44,24 @@ public class PlayerController : MonoBehaviour
     public float chargeDamage;
     public float currentChargeAccel;
     public float currentChargeDamage;
+    public float currentDamageRecive;
+    public bool isHasHit;
+    private Coroutine onPlayerDamageCoroutine;
     public static PlayerController GetStatic()
     {
         return staticInstance;
+        
+    }
+    void Awake()
+    {
+        staticInstance = this;
+        maxHealth = 100;
     }
 
     void Start()
     {
-        staticInstance = this;
         isCanCharge = true;
+        currentHealth = maxHealth;
 
         poolManager = PoolManager.GetStatic();
         moveAction = InputSystem.actions.FindAction("Move");
@@ -69,17 +80,17 @@ public class PlayerController : MonoBehaviour
     {
         time = Time.time;
         CharacterRotation();
-        if ( AttackAction.triggered && time >= nextShoot)
+        if ( AttackAction.triggered && time >= nextShoot && isHasHit == false)
         {
             CharacterShoot();
         }
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame && currentRicochetCooldown <= 0)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame && currentRicochetCooldown <= 0 && isHasHit == false)
         {
             RicochetSkill();
         }
 
-        if (ChargeAction.IsPressed())
+        if (ChargeAction.IsPressed() && isHasHit == false)
         {
             isPlayerCharging = true;
             shootCharge.SetActive(true);
@@ -91,7 +102,7 @@ public class PlayerController : MonoBehaviour
             shootCharge.SetActive(false);
             shootCharge.transform.localScale = new Vector3(0.1f, 0.1f, 0);
 
-            if (isChargeSpawn == true)
+            if (isChargeSpawn == true && isHasHit == false)
             {
                 currentChargeAccel = chargeAccelerator;
                 currentChargeDamage = chargeDamage;
@@ -110,6 +121,35 @@ public class PlayerController : MonoBehaviour
             currentRicochetCooldown -= Time.deltaTime;
         }   
 
+    }
+    public void OnPlayerHit(float damage , Vector2 dir)
+    {
+        if(onPlayerDamageCoroutine != null)
+        {
+            StopCoroutine(onPlayerDamageCoroutine);
+        }
+        onPlayerDamageCoroutine = StartCoroutine(PlayeraTakeDamage(damage,dir));
+    }
+
+    IEnumerator PlayeraTakeDamage(float damage , Vector2 dir)
+    {
+
+        currentDamageRecive += damage;
+        currentHealth -= damage;
+        
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);
+
+        if(currentDamageRecive >= maxHealth)
+        {
+            Destroy(gameObject);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        rb.linearVelocity = Vector2.zero;
+
+        isHasHit = false; 
     }
 
     IEnumerator OnCharge()
@@ -142,7 +182,7 @@ public class PlayerController : MonoBehaviour
     
     void FixedUpdate()
     {
-        if (moveAction.IsPressed())
+        if (moveAction.IsPressed() && isHasHit == false)
         {
             CharacterMove();
         }
