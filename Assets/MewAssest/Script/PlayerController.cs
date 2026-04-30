@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public float mass = 1f;
     public float linearDamp = 5f;
     public float shootCooldown = 1f;
+    public float clashDamage = 0;
     public float skillRicochetCooldown = 5f;
     public float skillChargingCooldown = 6f;
     public bool isChargeSpawn;
@@ -53,6 +54,11 @@ public class PlayerController : MonoBehaviour
     }
     void Awake()
     {
+        if(staticInstance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
         staticInstance = this;
         maxHealth = 100;
     }
@@ -221,4 +227,16 @@ public class PlayerController : MonoBehaviour
         currentRicochetCooldown = skillRicochetCooldown;
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out EnemyController enemyController))    
+        {
+            isHasHit = true; 
+
+            var dir = gameObject.transform.position - enemyController.transform.position;
+            dir.Normalize();
+
+            enemyController.OnEnemyHit(clashDamage, dir);
+        }
+    }
 }

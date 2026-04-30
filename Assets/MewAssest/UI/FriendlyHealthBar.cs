@@ -25,6 +25,7 @@ public class FriendlyHealthBar : MonoBehaviour
             healthBar.SetActive(true);
             healthBarImage.fillAmount = friendlyController.currentHealth / friendlyController.maxHealth;
             healthBar.transform.position = new Vector2 (gameObjectPos.position.x, gameObjectPos.position.y + 0.8f);
+            healthBar.transform.rotation = Quaternion.identity;
         }
         else
         {

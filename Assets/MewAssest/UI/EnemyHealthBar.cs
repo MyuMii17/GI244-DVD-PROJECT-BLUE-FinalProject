@@ -25,6 +25,7 @@ public class EnemyHealthBar : MonoBehaviour
             healthBar.SetActive(true);
             healthBarImage.fillAmount = enemyController.currentHealth / enemyController.maxHealth;
             healthBar.transform.position = new Vector2 (gameObjectPos.position.x, gameObjectPos.position.y + 0.8f);
+            healthBar.transform.rotation = Quaternion.identity;
         }
         else
         {

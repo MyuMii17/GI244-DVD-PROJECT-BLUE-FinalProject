@@ -87,7 +87,7 @@ public class EnemyController : MonoBehaviour
 
         rb.linearVelocity = Vector2.zero;
 
-        isHasHit = false; 
+        isHasHit = false;
     }
 
     private Transform FindClosest()
@@ -131,14 +131,17 @@ public class EnemyController : MonoBehaviour
 
             var dir = gameObject.transform.position - playerController.transform.position;
             dir.Normalize();
-
-            playerController.isHasHit = true;
+            
             playerController.OnPlayerHit(damage, dir);
         }
     }
     void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Friendly"))    
+        {
+            isClash = false;;
+        }
+        if (collision.gameObject.CompareTag("Player"))    
         {
             isClash = false;;
         }
