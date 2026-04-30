@@ -20,8 +20,10 @@ public class EnemyController : MonoBehaviour
     public bool isClash;
     public bool isMoving;
     private Coroutine onEnemyDamageCoroutine;
+    private SpawnManager spawnManager;
     void Start()
     {
+        spawnManager = SpawnManager.GetStatic();
         rb = GetComponent<Rigidbody2D>();
         currentDamageRecived = 0f;
         rb.mass = mass;
@@ -77,6 +79,7 @@ public class EnemyController : MonoBehaviour
 
         if(currentDamageRecived >= maxHealth)
         {
+            spawnManager.enemiesDead++;
             Destroy(gameObject);
         }
 

@@ -36,7 +36,6 @@ public class PlayerController : MonoBehaviour
     private InputAction AttackAction;
     private InputAction ChargeAction;
     private Rigidbody2D rb;
-    private PoolManager poolManager;
     private static PlayerController staticInstance;
     private Coroutine OnChargingCoroutine;
     public bool isCanCharge;
@@ -63,7 +62,6 @@ public class PlayerController : MonoBehaviour
         isCanCharge = true;
         currentHealth = maxHealth;
 
-        poolManager = PoolManager.GetStatic();
         moveAction = InputSystem.actions.FindAction("Move");
         lookAction = InputSystem.actions.FindAction("look");
         AttackAction = InputSystem.actions.FindAction("Attack");

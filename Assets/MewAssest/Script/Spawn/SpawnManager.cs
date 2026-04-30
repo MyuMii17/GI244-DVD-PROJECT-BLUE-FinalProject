@@ -5,9 +5,18 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    private Wave wave;
     private static SpawnManager StaticInstance = null;
-    private List<Transform> spawnPos = new List<Transform>();
+    public List<Transform> spawnPoint = new List<Transform>();
     public List<GameObject> enemiesPerfebs = new List<GameObject>();
+    [SerializeField]private WaveManager waveManager;
+    public List<Transform> spawnPointSelects;
+    public bool canSpawnEnemies;
+    public bool isStart;
+    public int totalEnemies;
+    public int enemiesDead;
+    public float nextSpawnTime;
+    public int waveCount = 0;
     private Coroutine spawnCoroutine;
     public bool isCanSpawn;
     public static SpawnManager GetStatic()
@@ -25,33 +34,66 @@ public class SpawnManager : MonoBehaviour
 
         StaticInstance = this;
 
-        for(int i = 0; i < 4; i++)
-        {
-            spawnPos.Add(transform.GetChild(i).transform);
-        }
-        isCanSpawn = true;
     }
+    public void ChangeWave(Wave wave)
+    {
+        this.wave = wave;
+        canSpawnEnemies = true;
+
+        isStart = true;
+        totalEnemies = 0;
+
+        enemiesDead = 0;
+
+        SelectsPoint(wave.numberOfRandomSpawnPoint);
+        StartCoroutine(SpawnEnemy());
+    }
+
+    public bool IsCompleted()
+    {
+        return enemiesDead >= wave.totalSpawnEnemies;
+    }
+
     void Update()
     {
-        if(isCanSpawn == true)
+        if (isStart)
         {
-            if(spawnCoroutine != null) return;
-            spawnCoroutine = StartCoroutine(SpawnEnemy());
+            if (totalEnemies < wave.totalSpawnEnemies)
+            {
+                canSpawnEnemies = true;
+            }
+            else
+            {
+                waveCount++;
+                canSpawnEnemies = false;
+            }
         }
+    }
+    void SelectsPoint(int amount)
+    {
+        spawnPointSelects = new List<Transform>(spawnPoint);
+        for(int i = 0; i < spawnPointSelects.Count; i++)
+        {
+            int rand = Random.Range(i, spawnPointSelects.Count);
+            Transform t = spawnPointSelects[i];
+            spawnPointSelects[i] = spawnPointSelects[rand];
+            spawnPointSelects[rand] = t;
+        }
+        spawnPointSelects = spawnPointSelects.GetRange(0, amount);
     }
 
     IEnumerator SpawnEnemy()
     {
-        isCanSpawn = false;
-        int spawnIndex = Random.Range(0,4);
-        Instantiate(
-            enemiesPerfebs[0], 
-            spawnPos[spawnIndex].position, 
-            Quaternion.identity
-        );
-        
-        yield return new WaitForSeconds(1);
-        spawnCoroutine = null;
-        isCanSpawn = true;
+        while (canSpawnEnemies)
+        {
+            var point = Random.Range(0, wave.numberOfRandomSpawnPoint);
+            Instantiate(
+                enemiesPerfebs[0], 
+                spawnPoint[point].position, 
+                Quaternion.identity
+            );
+            totalEnemies++;
+            yield return new WaitForSeconds(wave.spawnInterval);
+        }
     }
 }

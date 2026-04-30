@@ -10,8 +10,6 @@ public class ArrowChargingSkill : MonoBehaviour
     public float arrowDamage = 20f;
 
     private float arrowForce;
-    private float arrowScale = 1f;
-    private float maxArrowForce = 15f;
     private bool isCharging;
     public bool isCanCharging;
     private Rigidbody2D rb;
@@ -19,10 +17,9 @@ public class ArrowChargingSkill : MonoBehaviour
     private BoxCollider2D bc;
     private Coroutine OnArrowChargingCoroutine;
     private PlayerController playerController;
-    private PoolManager poolManager;
+
     void Start()
     {
-        poolManager = PoolManager.GetStatic();
         playerController = PlayerController.GetStatic();
         bc = GetComponent<BoxCollider2D>();
         rb = gameObject.GetComponent<Rigidbody2D>();
