@@ -1,6 +1,7 @@
 using System.Collections;
 using NUnit.Framework;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEditor.Build;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ public class EnemyController : MonoBehaviour
     public bool isHasHit;
     public bool isClash;
     public bool isMoving;
+    public bool isFriendlyHit;
+    public bool isPlayerHit;
     private Coroutine onEnemyDamageCoroutine;
     private SpawnManager spawnManager;
     void Start()
@@ -30,6 +33,8 @@ public class EnemyController : MonoBehaviour
         rb.linearDamping = linearDamp;
         moveForce = rb.mass * acceleration;
         currentHealth = maxHealth;
+
+        target = FindClosest(gameObject.transform);
     }
     void Update()
     {
@@ -42,11 +47,33 @@ public class EnemyController : MonoBehaviour
         {
             isMoving = false;
         }
+
+        if (isPlayerHit == true)
+        {
+            isFriendlyHit = false;
+        }
+
+        if (FriendlyManager.friendlys.Contains(null) == true)
+        {
+            isFriendlyHit = false;
+            target = FindClosest(gameObject.transform);
+        }
+
+        if (PlayerManager.player.Contains(null) == true)
+        {
+            isFriendlyHit = false;
+            target = FindClosest(gameObject.transform);
+        }
+
+        if(isFriendlyHit == true)
+        {
+            isPlayerHit = false;
+        }
     }
 
     void GoToTarget()
     {
-        target = FindClosest();
+        // target = FindClosest();
 
         if(target != null && isHasHit == false && isClash == false && isMoving == true)
         {
@@ -59,20 +86,21 @@ public class EnemyController : MonoBehaviour
         }
 
     }
-    public void OnEnemyHit(float damage , Vector2 dir)
+    public void OnEnemyHit(float damage , Vector2 dir, Transform transform)
     {
         if(onEnemyDamageCoroutine != null)
         {
             StopCoroutine(onEnemyDamageCoroutine);
         }
-        onEnemyDamageCoroutine = StartCoroutine(EnemyTakeDamage(damage,dir));
+        onEnemyDamageCoroutine = StartCoroutine(EnemyTakeDamage(damage,dir,transform));
     }
 
-    IEnumerator EnemyTakeDamage(float damage , Vector2 dir)
+    IEnumerator EnemyTakeDamage(float damage , Vector2 dir, Transform transform)
     {
 
         currentDamageRecived += damage;
         currentHealth -= damage;
+        target = FindClosest(transform);
         
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);
@@ -90,22 +118,34 @@ public class EnemyController : MonoBehaviour
         isHasHit = false;
     }
 
-    private Transform FindClosest()
+    public Transform FindClosest(Transform transform)
     {
         float minDistance = Mathf.Infinity;
         Transform closest = null;
-
-        foreach (var friendly in FriendlyManager.friendlys)
+        var target = transform;
+        
+        if(isFriendlyHit == false && isPlayerHit == false)
         {
-            if(friendly == null) continue;
-
-            float distance = Vector2.Distance(gameObject.transform.position, friendly.transform.position);
-
-            if(distance < minDistance)
+            foreach (var objects1 in objectManafer.objects) // หาสิ่งก่อสร้าง
             {
-                minDistance = distance;
-                closest = friendly.transform;
+                if(objects1 == null) continue;
+
+                float distance = Vector2.Distance(gameObject.transform.position, objects1.transform.position);
+
+                if(distance < minDistance)
+                {
+                    minDistance = distance;
+                    closest = objects1.transform;
+                }
             }
+        }
+        else if(isFriendlyHit == true && isPlayerHit == false)
+        {
+            closest = target;
+        }
+        else if(isFriendlyHit == false && isPlayerHit == true)
+        {
+            closest = target;
         }
         return closest;
     }

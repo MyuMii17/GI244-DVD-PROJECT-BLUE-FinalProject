@@ -50,9 +50,10 @@ public class ArrowRicochet : MonoBehaviour
             {
                 var dir = transform.position - enemyController.transform.position;
                 dir.Normalize();
+                enemyController.isPlayerHit = true;
 
                 enemyController.isHasHit = true;
-                enemyController.OnEnemyHit(arrowDamage,dir);
+                enemyController.OnEnemyHit(arrowDamage,dir, PlayerManager.player[0]);
             }
 
         Transform next = FindNextEnemy(other.transform);

@@ -93,17 +93,17 @@ public class FriendlyController : MonoBehaviour
         float minDistance = 10;
         Transform closest = null;
 
-        foreach (var friendly in EnemyManager.enemies)
+        foreach (var enemy in EnemyManager.enemies)
         {
-            if(friendly == null) continue;
+            if(enemy == null) continue;
 
-            float distance = Vector2.Distance(gameObject.transform.position, friendly.transform.position);
+            float distance = Vector2.Distance(gameObject.transform.position, enemy.transform.position);
 
             if(distance < minDistance)
             {
                 isFind = true;
                 minDistance = distance;
-                closest = friendly.transform;
+                closest = enemy.transform;
             }
         }
         return closest;
@@ -119,8 +119,9 @@ public class FriendlyController : MonoBehaviour
             var dir = gameObject.transform.position - enemyController.transform.position;
             dir.Normalize();
 
+            enemyController.isFriendlyHit = true;
             enemyController.isHasHit = true;
-            enemyController.OnEnemyHit(damage, dir);
+            enemyController.OnEnemyHit(damage, dir, gameObject.transform);
         }
     }
     void OnTriggerEnter2D(Collider2D collision)

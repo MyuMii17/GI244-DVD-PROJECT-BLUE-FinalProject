@@ -236,7 +236,7 @@ public class PlayerController : MonoBehaviour
             var dir = gameObject.transform.position - enemyController.transform.position;
             dir.Normalize();
 
-            enemyController.OnEnemyHit(clashDamage, dir);
+            enemyController.OnEnemyHit(clashDamage, dir, gameObject.transform);
         }
     }
 }
