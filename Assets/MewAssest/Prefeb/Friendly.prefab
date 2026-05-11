@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1011648590000655359}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Haelth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,7 +51,7 @@ GameObject:
   - component: {fileID: 2699588002007088113}
   - component: {fileID: 4255154266374974254}
   - component: {fileID: 4379208674632282380}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Friendly
   m_TagString: Friendly
   m_Icon: {fileID: 0}
@@ -252,7 +252,7 @@ GameObject:
   - component: {fileID: 5909594677830462656}
   - component: {fileID: 7243264976275947939}
   - component: {fileID: 6842482171553464314}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 7544513897850647240}
   - component: {fileID: 348652109570692966}
   - component: {fileID: 3370749532555640063}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: FriendlyCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +443,7 @@ GameObject:
   - component: {fileID: 4256591372697863994}
   - component: {fileID: 8308365033549136120}
   - component: {fileID: 5825859881087127111}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1220040492793297542}
   - component: {fileID: 4630136900702216675}
   - component: {fileID: 2947439224876001931}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 167028850441493157}
   - component: {fileID: 395526908374245986}
   - component: {fileID: 2425099438017548852}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6292878423589128024}
   - component: {fileID: 1891048423829067181}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7361437990091324428}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShootPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 5760971797926140362}
   - component: {fileID: 5388851897581374569}
   - component: {fileID: 651266471285189509}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,8 +403,7 @@ GameObject:
   - component: {fileID: 3478480187373905450}
   - component: {fileID: 1977127727158895818}
   - component: {fileID: 5547830497098527602}
-  - component: {fileID: 2274715100023048600}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -578,6 +577,7 @@ MonoBehaviour:
   mass: 1
   linearDamp: 5
   shootCooldown: 1
+  clashDamage: 0
   skillRicochetCooldown: 5
   skillChargingCooldown: 6
   isChargeSpawn: 0
@@ -596,18 +596,6 @@ MonoBehaviour:
   currentChargeDamage: 0
   currentDamageRecive: 0
   isHasHit: 0
---- !u!114 &2274715100023048600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6528993715996682080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f41d43c9b59f7c4419cf972a1ddde912, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FriendlyAdd
 --- !u!1 &6631196705156015227
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,7 +606,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2355935300716096426}
   - component: {fileID: 1288318004011588445}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShootChargeVfx
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -708,7 +696,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5127257305458646840}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Haelth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -745,7 +733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8862930824895445486}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShootRotation
   m_TagString: Untagged
   m_Icon: {fileID: 0}

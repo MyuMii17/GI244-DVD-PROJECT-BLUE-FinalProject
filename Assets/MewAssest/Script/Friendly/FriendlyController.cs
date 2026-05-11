@@ -119,8 +119,8 @@ public class FriendlyController : MonoBehaviour
             var dir = gameObject.transform.position - enemyController.transform.position;
             dir.Normalize();
 
-            enemyController.isFriendlyHit = true;
             enemyController.isHasHit = true;
+
             enemyController.OnEnemyHit(damage, dir, gameObject.transform);
         }
     }

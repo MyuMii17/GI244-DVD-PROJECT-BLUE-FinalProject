@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public Transform shootPos;
     public Transform shootRotation;
     public bool isPlayerCharging;
+    public float pushForce;
     // Hidden Setting
     private float moveForce;
     private float nextShoot;
@@ -58,7 +59,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        DontDestroyOnLoad(this.gameObject);
+
         staticInstance = this;
         maxHealth = 100;
     }
@@ -84,12 +85,12 @@ public class PlayerController : MonoBehaviour
     {
         time = Time.time;
         CharacterRotation();
-        if ( AttackAction.triggered && time >= nextShoot && isHasHit == false)
+        if ( AttackAction.triggered && time >= nextShoot && isHasHit == false && isPlayerCharging == false)
         {
             CharacterShoot();
         }
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame && currentRicochetCooldown <= 0 && isHasHit == false)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame && currentRicochetCooldown <= 0 && isHasHit == false && isPlayerCharging == false)
         {
             RicochetSkill();
         }
@@ -142,7 +143,7 @@ public class PlayerController : MonoBehaviour
         currentHealth -= damage;
         
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);
+        rb.AddForce(-dir * pushForce * 2,ForceMode2D.Impulse);
 
         if(currentDamageRecive >= maxHealth)
         {
@@ -236,6 +237,7 @@ public class PlayerController : MonoBehaviour
             var dir = gameObject.transform.position - enemyController.transform.position;
             dir.Normalize();
 
+            enemyController.isHasHit = true;
             enemyController.OnEnemyHit(clashDamage, dir, gameObject.transform);
         }
     }

@@ -8,10 +8,13 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private Collider2D cd;
     private Transform target;
+    private LayerMask objectLayer;
     public float mass = 1f;
     public float acceleration = 2f;
     public float linearDamp = 0f;
+    public float circleRange;
     private float moveForce;
     public float maxHealth = 100f;
     public float currentHealth;
@@ -22,19 +25,22 @@ public class EnemyController : MonoBehaviour
     public bool isMoving;
     public bool isFriendlyHit;
     public bool isPlayerHit;
+    public bool isLongRange;
     private Coroutine onEnemyDamageCoroutine;
     private SpawnManager spawnManager;
     void Start()
     {
         spawnManager = SpawnManager.GetStatic();
         rb = GetComponent<Rigidbody2D>();
+        cd = GetComponent<Collider2D>();
+        objectLayer = LayerMask.GetMask("Object");
+
         currentDamageRecived = 0f;
         rb.mass = mass;
         rb.linearDamping = linearDamp;
         moveForce = rb.mass * acceleration;
         currentHealth = maxHealth;
-
-        target = FindClosest(gameObject.transform);
+        target = null;
     }
     void Update()
     {
@@ -48,24 +54,7 @@ public class EnemyController : MonoBehaviour
             isMoving = false;
         }
 
-        if (isPlayerHit == true)
-        {
-            isFriendlyHit = false;
-        }
-
-        if (FriendlyManager.friendlys.Contains(null) == true)
-        {
-            isFriendlyHit = false;
-            target = FindClosest(gameObject.transform);
-        }
-
-        if (PlayerManager.player.Contains(null) == true)
-        {
-            isFriendlyHit = false;
-            target = FindClosest(gameObject.transform);
-        }
-
-        if(isFriendlyHit == true)
+        if(PlayerManager.players.Count == 0 && isPlayerHit == true)
         {
             isPlayerHit = false;
         }
@@ -73,10 +62,30 @@ public class EnemyController : MonoBehaviour
 
     void GoToTarget()
     {
-        // target = FindClosest();
+        FindCloset();
+
+        if(target == null)
+        {
+            float minDistance = Mathf.Infinity;
+            Transform detected = null;
+            foreach (var objects in ObjectManager.objects) // หาสิ่งก่อสร้าง
+            {
+                if(objects == null) continue;
+
+                float distance = Vector2.Distance(gameObject.transform.position, objects.transform.position);
+
+                if(distance < minDistance)
+                {
+                    minDistance = distance;
+                    detected = objects.transform;
+                }
+            }
+            target = detected;
+        }
 
         if(target != null && isHasHit == false && isClash == false && isMoving == true)
         {
+            Debug.Log(target);
             Vector2 dir = (target.position - transform.position).normalized;
             rb.linearVelocity = dir * moveForce;
         }
@@ -100,7 +109,7 @@ public class EnemyController : MonoBehaviour
 
         currentDamageRecived += damage;
         currentHealth -= damage;
-        target = FindClosest(transform);
+        target = transform;
         
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);
@@ -118,36 +127,43 @@ public class EnemyController : MonoBehaviour
         isHasHit = false;
     }
 
-    public Transform FindClosest(Transform transform)
+    public Transform FindHit(Transform transform)
     {
-        float minDistance = Mathf.Infinity;
-        Transform closest = null;
-        var target = transform;
+        Transform detected = null;
+        Transform target = transform;
         
-        if(isFriendlyHit == false && isPlayerHit == false)
-        {
-            foreach (var objects1 in objectManafer.objects) // หาสิ่งก่อสร้าง
-            {
-                if(objects1 == null) continue;
+        detected = target;
 
-                float distance = Vector2.Distance(gameObject.transform.position, objects1.transform.position);
+        return detected;
+    }
+
+    public void FindCloset()
+    {
+        float minDistance = 5;
+        Transform closest = null;
+        Collider2D[] founds = Physics2D.OverlapCircleAll(transform.position, circleRange, objectLayer);
+        foreach(Collider2D found in founds)
+        {
+            if(found == null) continue;
+
+                float distance = Vector2.Distance(gameObject.transform.position, found.transform.position);
 
                 if(distance < minDistance)
                 {
                     minDistance = distance;
-                    closest = objects1.transform;
+                    closest = found.transform;
                 }
-            }
         }
-        else if(isFriendlyHit == true && isPlayerHit == false)
+        if(closest != null)
         {
-            closest = target;
+            target = closest;
         }
-        else if(isFriendlyHit == false && isPlayerHit == true)
-        {
-            closest = target;
-        }
-        return closest;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, circleRange);
     }
 
 
@@ -180,6 +196,13 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.CompareTag("Friendly"))    
         {
             isClash = false;;
+            if (collision.gameObject.TryGetComponent(out FriendlyController friendlyController))
+            {
+                if(friendlyController.currentDamageRecived >= friendlyController.maxHealth)
+                {
+                    isFriendlyHit = false;
+                }
+            }
         }
         if (collision.gameObject.CompareTag("Player"))    
         {

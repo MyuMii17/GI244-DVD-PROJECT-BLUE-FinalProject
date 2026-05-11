@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5011011786494042569}
   - component: {fileID: 8239515724704619604}
   - component: {fileID: 350271005603892068}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -184,10 +184,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 65
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 54
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -271,6 +271,7 @@ MonoBehaviour:
   mass: 1
   acceleration: 2
   linearDamp: 0
+  circleRange: 3
   maxHealth: 100
   currentHealth: 0
   currentDamageRecived: 0
@@ -278,6 +279,9 @@ MonoBehaviour:
   isHasHit: 0
   isClash: 0
   isMoving: 0
+  isFriendlyHit: 0
+  isPlayerHit: 0
+  isLongRange: 0
 --- !u!1 &4647173900223667071
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,7 +293,7 @@ GameObject:
   - component: {fileID: 4468899960623526202}
   - component: {fileID: 8202852914197121445}
   - component: {fileID: 6063703912279539723}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,7 +370,7 @@ GameObject:
   - component: {fileID: 4344198573743265077}
   - component: {fileID: 2160200569895585071}
   - component: {fileID: 7894179300747158214}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: EnemyCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -478,7 +482,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2898438418934175025}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Haelth
   m_TagString: Untagged
   m_Icon: {fileID: 0}

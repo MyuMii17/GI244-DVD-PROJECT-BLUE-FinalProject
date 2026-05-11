@@ -30,7 +30,6 @@ public class SpawnManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
 
         StaticInstance = this;
 
@@ -89,7 +88,7 @@ public class SpawnManager : MonoBehaviour
             var point = Random.Range(0, wave.numberOfRandomSpawnPoint);
             Instantiate(
                 enemiesPerfebs[0], 
-                spawnPoint[point].position, 
+                spawnPointSelects[point].position, 
                 Quaternion.identity
             );
             totalEnemies++;

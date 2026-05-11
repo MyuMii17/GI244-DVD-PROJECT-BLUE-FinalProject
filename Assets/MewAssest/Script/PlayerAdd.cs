@@ -4,10 +4,10 @@ public class PlayerAdd : MonoBehaviour
 {
     void OnEnable()
     {
-        PlayerManager.player.Add(transform);
+        PlayerManager.players.Add(transform);
     }
     void OnDisable()
     {
-        PlayerManager.player.Remove(transform);
+        PlayerManager.players.Remove(transform);
     }
 }
