@@ -85,7 +85,6 @@ public class EnemyController : MonoBehaviour
 
         if(target != null && isHasHit == false && isClash == false && isMoving == true)
         {
-            Debug.Log(target);
             Vector2 dir = (target.position - transform.position).normalized;
             rb.linearVelocity = dir * moveForce;
         }
@@ -127,19 +126,9 @@ public class EnemyController : MonoBehaviour
         isHasHit = false;
     }
 
-    public Transform FindHit(Transform transform)
-    {
-        Transform detected = null;
-        Transform target = transform;
-        
-        detected = target;
-
-        return detected;
-    }
-
     public void FindCloset()
     {
-        float minDistance = 5;
+        float minDistance = circleRange;
         Transform closest = null;
         Collider2D[] founds = Physics2D.OverlapCircleAll(transform.position, circleRange, objectLayer);
         foreach(Collider2D found in founds)

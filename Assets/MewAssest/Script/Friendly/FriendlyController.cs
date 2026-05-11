@@ -14,9 +14,11 @@ public class FriendlyController : MonoBehaviour
     public float currentDamageRecived;
     public float damage = 10;
     public bool isHasHit;
-    public bool isFind;
     public bool isClash;
+    public float circleRange = 5;
+
     public bool isMoving;
+
     private Coroutine onFriendlyDamageCoroutine;
 
     void Start()
@@ -90,23 +92,33 @@ public class FriendlyController : MonoBehaviour
 
     private Transform FindClosest()
     {
-        float minDistance = 10;
+        float minDistance = circleRange;
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, circleRange);
+
         Transform closest = null;
 
-        foreach (var enemy in EnemyManager.enemies)
+        foreach (var enemy in enemies)
         {
-            if(enemy == null) continue;
-
-            float distance = Vector2.Distance(gameObject.transform.position, enemy.transform.position);
-
-            if(distance < minDistance)
+            if (enemy.CompareTag("Enemy"))
             {
-                isFind = true;
-                minDistance = distance;
-                closest = enemy.transform;
+                if(enemy == null) continue;
+
+                float distance = Vector2.Distance(gameObject.transform.position, enemy.transform.position);
+
+                if(distance < minDistance)
+                {
+                    minDistance = distance;
+                    closest = enemy.transform;
+                }
             }
         }
         return closest;
+    }
+    
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, circleRange);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -123,10 +135,6 @@ public class FriendlyController : MonoBehaviour
 
             enemyController.OnEnemyHit(damage, dir, gameObject.transform);
         }
-    }
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        
     }
     
     void OnCollisionExit2D(Collision2D collision)
