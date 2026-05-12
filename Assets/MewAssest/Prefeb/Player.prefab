@@ -403,6 +403,7 @@ GameObject:
   - component: {fileID: 3478480187373905450}
   - component: {fileID: 1977127727158895818}
   - component: {fileID: 5547830497098527602}
+  - component: {fileID: 4155841459585632016}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -588,6 +589,7 @@ MonoBehaviour:
   shootPos: {fileID: 7361437990091324428}
   shootRotation: {fileID: 8862930824895445486}
   isPlayerCharging: 0
+  pushForce: 0.5
   shootCharge: {fileID: 6631196705156015227}
   isCanCharge: 0
   chargeAccelerator: 0
@@ -596,6 +598,18 @@ MonoBehaviour:
   currentChargeDamage: 0
   currentDamageRecive: 0
   isHasHit: 0
+--- !u!114 &4155841459585632016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6528993715996682080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 052909ce1e761e1468c7ff526913f3f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAdd
 --- !u!1 &6631196705156015227
 GameObject:
   m_ObjectHideFlags: 0

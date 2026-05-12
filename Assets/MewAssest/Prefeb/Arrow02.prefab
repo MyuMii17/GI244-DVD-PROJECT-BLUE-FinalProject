@@ -183,3 +183,4 @@ MonoBehaviour:
   acceleration: 10
   linearDamp: 0
   arrowDamage: 5
+  pushForce: 0.25

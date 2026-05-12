@@ -8,6 +8,7 @@ public class ArrowRicochet : MonoBehaviour
     public float acceleration = 5f;
     public float linearDamp = 0f;
     public float arrowDamage = 5f;
+    public float pushForce;
     private int maxChain = 3;
     private int chainRange = 20;
     private int currentChain = 0;
@@ -52,7 +53,8 @@ public class ArrowRicochet : MonoBehaviour
                 dir.Normalize();
 
                 enemyController.isHasHit = true;
-                enemyController.OnEnemyHit(arrowDamage,dir, PlayerManager.players[0]);
+                enemyController.isPlayerHit = true;
+                enemyController.OnEnemyHit(arrowDamage,dir, PlayerManager.players[0],pushForce);
             }
 
         Transform next = FindNextEnemy(other.transform);

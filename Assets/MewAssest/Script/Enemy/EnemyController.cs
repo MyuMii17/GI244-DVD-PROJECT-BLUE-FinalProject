@@ -11,10 +11,16 @@ public class EnemyController : MonoBehaviour
     private Collider2D cd;
     private Transform target;
     private LayerMask objectLayer;
+    private LayerMask constructionLayer;
+    private float rangeDistance;
+    public Transform shootPosition;
+    public Transform shootRoataion;
+    public GameObject arrowPrefeb;
     public float mass = 1f;
     public float acceleration = 2f;
     public float linearDamp = 0f;
     public float circleRange;
+    public float pushForce;
     private float moveForce;
     public float maxHealth = 100f;
     public float currentHealth;
@@ -23,8 +29,13 @@ public class EnemyController : MonoBehaviour
     public bool isHasHit;
     public bool isClash;
     public bool isMoving;
-    public bool isFriendlyHit;
     public bool isPlayerHit;
+    public bool isFind;
+
+    [Header("Range Enemy")]
+    public float shootCooldown;
+    private float nextShoot;
+
     public bool isLongRange;
     private Coroutine onEnemyDamageCoroutine;
     private SpawnManager spawnManager;
@@ -34,6 +45,7 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         cd = GetComponent<Collider2D>();
         objectLayer = LayerMask.GetMask("Object");
+        constructionLayer = LayerMask.GetMask("Construction");
 
         currentDamageRecived = 0f;
         rb.mass = mass;
@@ -41,6 +53,9 @@ public class EnemyController : MonoBehaviour
         moveForce = rb.mass * acceleration;
         currentHealth = maxHealth;
         target = null;
+        
+        shootRoataion = transform.GetChild(0).transform;
+        shootPosition = shootRoataion.transform.GetChild(0).transform.GetChild(0).transform;
     }
     void Update()
     {
@@ -64,29 +79,27 @@ public class EnemyController : MonoBehaviour
     {
         FindCloset();
 
-        if(target == null)
+        if (target != null)
         {
-            float minDistance = Mathf.Infinity;
-            Transform detected = null;
-            foreach (var objects in ObjectManager.objects) // หาสิ่งก่อสร้าง
-            {
-                if(objects == null) continue;
-
-                float distance = Vector2.Distance(gameObject.transform.position, objects.transform.position);
-
-                if(distance < minDistance)
-                {
-                    minDistance = distance;
-                    detected = objects.transform;
-                }
-            }
-            target = detected;
+            rangeDistance = Vector2.Distance(gameObject.transform.position, target.transform.position);
         }
 
-        if(target != null && isHasHit == false && isClash == false && isMoving == true)
+        if (isLongRange == true && isFind && rangeDistance <= 5)
+        {
+
+            if (target != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                Shoot();
+            }
+        }
+        else if(target != null && !isHasHit && !isClash && isMoving)
         {
             Vector2 dir = (target.position - transform.position).normalized;
             rb.linearVelocity = dir * moveForce;
+
+            float angle = Mathf.Atan2(dir.y ,dir.x) * Mathf.Rad2Deg;
+            shootRoataion.transform.rotation = Quaternion.Euler(0, 0, angle); 
         }
         else
         {
@@ -94,16 +107,16 @@ public class EnemyController : MonoBehaviour
         }
 
     }
-    public void OnEnemyHit(float damage , Vector2 dir, Transform transform)
+    public void OnEnemyHit(float damage , Vector2 dir, Transform transform, float push)
     {
         if(onEnemyDamageCoroutine != null)
         {
             StopCoroutine(onEnemyDamageCoroutine);
         }
-        onEnemyDamageCoroutine = StartCoroutine(EnemyTakeDamage(damage,dir,transform));
+        onEnemyDamageCoroutine = StartCoroutine(EnemyTakeDamage(damage,dir,transform,push));
     }
 
-    IEnumerator EnemyTakeDamage(float damage , Vector2 dir, Transform transform)
+    IEnumerator EnemyTakeDamage(float damage , Vector2 dir, Transform transform, float push)
     {
 
         currentDamageRecived += damage;
@@ -111,7 +124,8 @@ public class EnemyController : MonoBehaviour
         target = transform;
         
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);
+
+        rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
 
         if(currentDamageRecived >= maxHealth)
         {
@@ -119,7 +133,7 @@ public class EnemyController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1);
 
         rb.linearVelocity = Vector2.zero;
 
@@ -128,25 +142,103 @@ public class EnemyController : MonoBehaviour
 
     public void FindCloset()
     {
+        if(ObjectManager.objects.Count == 0) return;
+        
         float minDistance = circleRange;
         Transform closest = null;
+
+        string[] priorityTags = {"Friendly","Player"};
         Collider2D[] founds = Physics2D.OverlapCircleAll(transform.position, circleRange, objectLayer);
-        foreach(Collider2D found in founds)
+        Collider2D[] foundConstructions = Physics2D.OverlapCircleAll(transform.position, circleRange, constructionLayer);
+
+        if(foundConstructions.Length > 0 && founds.Length == 0 && isLongRange)
         {
-            if(found == null) continue;
+            isFind = true;
+        }
+        else if(foundConstructions.Length == 0 && founds.Length == 0)
+        {
+            isFind = false;
+        }
+        
 
-                float distance = Vector2.Distance(gameObject.transform.position, found.transform.position);
+        if(founds.Length == 0)
+        {   
+            target = null;
+            if (isPlayerHit == false)
+            {
+                minDistance = Mathf.Infinity;
 
-                if(distance < minDistance)
+                Transform detected = null;
+                foreach (var objects in ObjectManager.objects) // หาสิ่งก่อสร้าง
                 {
-                    minDistance = distance;
-                    closest = found.transform;
+                    if(objects == null) continue;
+
+                    float distance = Vector2.Distance(gameObject.transform.position, objects.transform.position);
+
+                    if(distance < minDistance)
+                    {
+                        minDistance = distance;
+                        detected = objects.transform;
+                    }
                 }
+                target = detected;
+            }
         }
-        if(closest != null)
+        else if(founds.Length > 0)
         {
-            target = closest;
+            foreach(string tag in priorityTags)
+            {
+                foreach(Collider2D found in founds)
+                {
+                    if(found == null) continue;
+
+                    if (found.CompareTag(tag))
+                    {
+                        float distance = Vector2.Distance(gameObject.transform.position, found.transform.position);
+
+                        if(distance < minDistance)
+                        {
+                            minDistance = distance;
+                            closest = found.transform;
+                        }
+                    }
+                }
+
+                if(closest != null)
+                {
+                    isFind = true;
+                    target = closest;
+                    return;
+                }
+                else
+                {
+                    isFind = false;
+                }
+            }
         }
+    }
+
+    void Shoot()
+    {
+        var targetPosition = target.transform.position;
+
+        var dir = (targetPosition - transform.position).normalized;
+
+        float angle = Mathf.Atan2(dir.y ,dir.x) * Mathf.Rad2Deg;
+
+        shootRoataion.transform.rotation = Quaternion.Euler(0, 0, angle); 
+        
+        if (Time.time >= nextShoot)
+        {
+            var arrow = Instantiate(
+                arrowPrefeb,
+                shootPosition.position,
+                shootPosition.rotation
+            );
+            Destroy(arrow, 2);
+            nextShoot = Time.time + shootCooldown;
+        }
+
     }
 
     private void OnDrawGizmosSelected()
@@ -166,7 +258,7 @@ public class EnemyController : MonoBehaviour
             var dir = gameObject.transform.position - friendlyController.transform.position;
             dir.Normalize();
 
-            friendlyController.OnFriendlyHit(damage, dir);
+            friendlyController.OnFriendlyHit(damage, dir, pushForce);
         }
 
         if (collision.gameObject.TryGetComponent(out PlayerController playerController))    
@@ -177,7 +269,7 @@ public class EnemyController : MonoBehaviour
             var dir = gameObject.transform.position - playerController.transform.position;
             dir.Normalize();
             
-            playerController.OnPlayerHit(damage, dir);
+            playerController.OnPlayerHit(damage, dir, pushForce);
         }
     }
     void OnCollisionExit2D(Collision2D collision)
@@ -185,13 +277,6 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.CompareTag("Friendly"))    
         {
             isClash = false;;
-            if (collision.gameObject.TryGetComponent(out FriendlyController friendlyController))
-            {
-                if(friendlyController.currentDamageRecived >= friendlyController.maxHealth)
-                {
-                    isFriendlyHit = false;
-                }
-            }
         }
         if (collision.gameObject.CompareTag("Player"))    
         {

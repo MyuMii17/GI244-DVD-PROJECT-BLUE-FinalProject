@@ -1,14 +1,23 @@
+using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private Transform playerTransform;
-    private Camera cam;
-
+    public Transform playerTransform;
+    private static CameraController StaticInstance = null;
+    public static CameraController GetStatic()
+    {
+        return StaticInstance;
+    }
      void Awake()
     {
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        cam = GetComponent<Camera>();
+        if(StaticInstance != null)
+        {
+            Destroy(this.gameObject);
+        }
+
+        StaticInstance = this;
     }
     void Start()
     {

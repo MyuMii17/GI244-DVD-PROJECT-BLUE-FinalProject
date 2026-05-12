@@ -55,7 +55,8 @@ public class ArrowChargingSkill : MonoBehaviour
                 dir.Normalize();
 
                 enemyController.isHasHit = true;
-                enemyController.OnEnemyHit(arrowDamage, dir, PlayerManager.players[0]);
+                enemyController.isPlayerHit = true;
+                enemyController.OnEnemyHit(arrowDamage, dir, PlayerManager.players[0], arrowForce);
             }
         }
     }

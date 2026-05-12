@@ -6,6 +6,7 @@ public class Arrow : MonoBehaviour
     public float acceleration = 5f;
     public float linearDamp = 0f;
     public float arrowDamage = 10f;
+    public float pushForce;
     private float arrowForce;
     private Rigidbody2D rb;
 
@@ -27,7 +28,8 @@ public class Arrow : MonoBehaviour
                 dir.Normalize();
                 
                 enemyController.isHasHit = true;
-                enemyController.OnEnemyHit(arrowDamage, dir, PlayerManager.players[0]);
+                enemyController.isPlayerHit = true;
+                enemyController.OnEnemyHit(arrowDamage, dir, PlayerManager.players[0], pushForce);
             }
             Destroy(gameObject);
         }

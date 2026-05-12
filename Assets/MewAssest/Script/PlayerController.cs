@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private float currentRicochetCooldown;
     private float time;
     [SerializeField] private GameObject shootCharge;
+    private CameraController cameraController;
     private InputAction moveAction;
     private InputAction lookAction;
     private InputAction AttackAction;
@@ -66,8 +67,11 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         isCanCharge = true;
         currentHealth = maxHealth;
+
+        cameraController = CameraController.GetStatic();
 
         moveAction = InputSystem.actions.FindAction("Move");
         lookAction = InputSystem.actions.FindAction("look");
@@ -79,6 +83,8 @@ public class PlayerController : MonoBehaviour
         moveForce = rb.mass * acceleration;
         nextShoot = 0;
         currentRicochetCooldown = 0;
+
+        cameraController.playerTransform = gameObject.transform;
     }
 
     void Update()
@@ -127,23 +133,23 @@ public class PlayerController : MonoBehaviour
         }   
 
     }
-    public void OnPlayerHit(float damage , Vector2 dir)
+    public void OnPlayerHit(float damage , Vector2 dir, float push)
     {
         if(onPlayerDamageCoroutine != null)
         {
             StopCoroutine(onPlayerDamageCoroutine);
         }
-        onPlayerDamageCoroutine = StartCoroutine(PlayeraTakeDamage(damage,dir));
+        onPlayerDamageCoroutine = StartCoroutine(PlayeraTakeDamage(damage,dir,push));
     }
 
-    IEnumerator PlayeraTakeDamage(float damage , Vector2 dir)
+    IEnumerator PlayeraTakeDamage(float damage , Vector2 dir, float push)
     {
 
         currentDamageRecive += damage;
         currentHealth -= damage;
         
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(-dir * pushForce * 2,ForceMode2D.Impulse);
+        rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
 
         if(currentDamageRecive >= maxHealth)
         {
@@ -211,11 +217,12 @@ public class PlayerController : MonoBehaviour
     }
     private void CharacterShoot()
     {
-        Instantiate(
+        var arrow = Instantiate(
             arrowPrefeb,
             shootPos.position,
             shootPos.rotation
         );
+        Destroy(arrow, 2);
         nextShoot = Time.time + shootCooldown;
     }
     private void RicochetSkill()
@@ -238,7 +245,7 @@ public class PlayerController : MonoBehaviour
             dir.Normalize();
 
             enemyController.isHasHit = true;
-            enemyController.OnEnemyHit(clashDamage, dir, gameObject.transform);
+            enemyController.OnEnemyHit(clashDamage, dir, gameObject.transform, pushForce);
         }
     }
 }

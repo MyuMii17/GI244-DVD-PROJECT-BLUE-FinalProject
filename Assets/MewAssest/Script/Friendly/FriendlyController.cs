@@ -5,9 +5,12 @@ public class FriendlyController : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Transform target;
+    public Transform shootPosition;
+    public Transform shootRoataion;
     public float mass = 1f;
     public float acceleration = 2f;
     public float linearDamp = 0f;
+    public float pushForce;
     private float moveForce;
     public float maxHealth = 100f;
     public float currentHealth;
@@ -24,6 +27,10 @@ public class FriendlyController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        shootRoataion = transform.GetChild(0).transform;
+        shootPosition = shootRoataion.transform.GetChild(0).transform.GetChild(0).transform;
+
         currentDamageRecived = 0f;
         rb.mass = mass;
         rb.linearDamping = linearDamp;
@@ -52,6 +59,9 @@ public class FriendlyController : MonoBehaviour
         {
             Vector2 dir = (target.position - transform.position).normalized;
             rb.linearVelocity = dir * moveForce;
+
+            float angle = Mathf.Atan2(dir.y ,dir.x) * Mathf.Rad2Deg;
+            shootRoataion.transform.rotation = Quaternion.Euler(0, 0, angle); 
         }
         else
         {
@@ -59,31 +69,31 @@ public class FriendlyController : MonoBehaviour
         }
 
     }
-    public void OnFriendlyHit(float damage , Vector2 dir)
+    public void OnFriendlyHit(float damage , Vector2 dir, float push)
     {
         if(onFriendlyDamageCoroutine != null)
         {
             StopCoroutine(onFriendlyDamageCoroutine);
         }
                 
-        onFriendlyDamageCoroutine = StartCoroutine(FriendlyTakeDamage(damage,dir));
+        onFriendlyDamageCoroutine = StartCoroutine(FriendlyTakeDamage(damage,dir,push));
     }
 
-    IEnumerator FriendlyTakeDamage(float damage , Vector2 dir)
+    IEnumerator FriendlyTakeDamage(float damage , Vector2 dir, float push)
     {
 
         currentDamageRecived += damage;
         currentHealth-= damage;
 
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(-dir * moveForce * 2,ForceMode2D.Impulse);
+        rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
 
         if(currentDamageRecived >= maxHealth)
         {
             Destroy(gameObject);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1);
 
         rb.linearVelocity = Vector2.zero;
 
@@ -133,7 +143,7 @@ public class FriendlyController : MonoBehaviour
 
             enemyController.isHasHit = true;
 
-            enemyController.OnEnemyHit(damage, dir, gameObject.transform);
+            enemyController.OnEnemyHit(damage, dir, gameObject.transform, pushForce);
         }
     }
     
