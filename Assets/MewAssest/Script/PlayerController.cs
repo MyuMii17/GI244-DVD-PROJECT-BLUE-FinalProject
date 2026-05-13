@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private InputAction AttackAction;
     private InputAction ChargeAction;
     private Rigidbody2D rb;
+    private Collider2D cd;
     private static PlayerController staticInstance;
     private Coroutine OnChargingCoroutine;
     public bool isCanCharge;
@@ -78,6 +79,7 @@ public class PlayerController : MonoBehaviour
         AttackAction = InputSystem.actions.FindAction("Attack");
         ChargeAction = InputSystem.actions.FindAction("Charge");
         rb = gameObject.GetComponent<Rigidbody2D>();
+        cd = gameObject.GetComponent<Collider2D>();
         rb.mass = mass;
         rb.linearDamping = linearDamp;
         moveForce = rb.mass * acceleration;
@@ -147,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
         currentDamageRecive += damage;
         currentHealth -= damage;
-        
+        cd.enabled = false;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
 
@@ -159,7 +161,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         rb.linearVelocity = Vector2.zero;
-
+        cd.enabled = true;
         isHasHit = false; 
     }
 

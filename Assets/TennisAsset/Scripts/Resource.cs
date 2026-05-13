@@ -6,9 +6,8 @@ public class Resource : MonoBehaviour
 
     public int Gold;
     public int Food;
-
     public int Citizen;
-
+    public int MaxCitizen = 30;
     public static Resource GetInstance()
     {
         return ResourceInstance;
@@ -25,8 +24,18 @@ public class Resource : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         ResourceInstance = this;
+
+        MaxCitizen = 30;
     }
 
-   
+    private void Update()
+    {
+        if (Citizen > MaxCitizen)
+        { 
+            Citizen = MaxCitizen;
+        }
+
+    }
+
 
 }

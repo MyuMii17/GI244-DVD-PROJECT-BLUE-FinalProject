@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class FriendlyController : MonoBehaviour
 {
+    private Collider2D cd;
     private Rigidbody2D rb;
     private Transform target;
     public Transform shootPosition;
@@ -27,7 +28,7 @@ public class FriendlyController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
+        cd = GetComponent<Collider2D>();
         shootRoataion = transform.GetChild(0).transform;
         shootPosition = shootRoataion.transform.GetChild(0).transform.GetChild(0).transform;
 
@@ -84,19 +85,22 @@ public class FriendlyController : MonoBehaviour
 
         currentDamageRecived += damage;
         currentHealth-= damage;
-
+        cd.enabled = false;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
 
         if(currentDamageRecived >= maxHealth)
         {
-            Destroy(gameObject);
+            
+            currentHealth = maxHealth;
+            currentDamageRecived = 0;
+            FriendliesPool.GetInstance().ReturnFriend(this.gameObject);
         }
 
         yield return new WaitForSeconds(1);
 
         rb.linearVelocity = Vector2.zero;
-
+        cd.enabled = true;
         isHasHit = false; 
     }
 

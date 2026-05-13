@@ -53,7 +53,7 @@ public class ArrowChargingSkill : MonoBehaviour
             {
                 var dir = transform.position - enemyController.transform.position;
                 dir.Normalize();
-
+                arrowForce/= 2;
                 enemyController.isHasHit = true;
                 enemyController.isPlayerHit = true;
                 enemyController.OnEnemyHit(arrowDamage, dir, PlayerManager.players[0], arrowForce);

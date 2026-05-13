@@ -121,8 +121,12 @@ public class EnemyController : MonoBehaviour
 
         currentDamageRecived += damage;
         currentHealth -= damage;
-        target = transform;
+        if (!transform.CompareTag("Construction"))
+        {
+            target = transform;
+        }
         
+        cd.enabled = false;
         rb.linearVelocity = Vector2.zero;
 
         rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
@@ -136,7 +140,7 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         rb.linearVelocity = Vector2.zero;
-
+        cd.enabled = true;
         isHasHit = false;
     }
 
@@ -163,11 +167,11 @@ public class EnemyController : MonoBehaviour
 
         if(founds.Length == 0)
         {   
-            target = null;
+            //target = null;
             if (isPlayerHit == false)
             {
                 minDistance = Mathf.Infinity;
-
+                target = null;
                 Transform detected = null;
                 foreach (var objects in ObjectManager.objects) // หาสิ่งก่อสร้าง
                 {

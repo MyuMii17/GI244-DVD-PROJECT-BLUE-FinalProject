@@ -65,6 +65,8 @@ public class FriendliesPool : MonoBehaviour
 
     public void ReturnFriend(GameObject friend)
     {
+        Resource.GetInstance().MaxCitizen += 3;
+        
         friendlyPool.Add(friend);
         friend.SetActive(false);
         
