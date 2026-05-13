@@ -23,10 +23,6 @@ public abstract class BuildingClass : MonoBehaviour
 
     }
 
-    private void Start()
-    {
-        
-    }
     private void Update()
     {
         if (this.IsBuilt)
@@ -56,6 +52,7 @@ public abstract class BuildingClass : MonoBehaviour
 
     public void Build()
     {
+        currentHealth = MaxHealth;
         if (this.IsBuilt) return;
         if (Resource.GetInstance().Gold < GoldRequire || Resource.GetInstance().Food < FoodRequire) return;
         Resource.GetInstance().Gold -= GoldRequire;
@@ -79,6 +76,7 @@ public abstract class BuildingClass : MonoBehaviour
         {
             gameObject.SetActive(false);
             this.IsBuilt = false;
+
         }
     }
 

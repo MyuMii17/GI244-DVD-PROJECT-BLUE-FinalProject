@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 11117358}
   - component: {fileID: 11117360}
   - component: {fileID: 11117361}
+  - component: {fileID: 11117362}
   m_Layer: 7
   m_Name: Apothecary
   m_TagString: Construction
@@ -296,6 +297,18 @@ MonoBehaviour:
   HealthBar: {fileID: 2090909082}
   healthBarImage: {fileID: 1459521341}
   HealthCanvas: {fileID: 2123732284}
+--- !u!114 &11117362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11117357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e20a9c89a95e184f9d1574ca12c2e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectAdd
 --- !u!1 &14174127
 GameObject:
   m_ObjectHideFlags: 0
@@ -11529,6 +11542,7 @@ GameObject:
   - component: {fileID: 801651738}
   - component: {fileID: 801651740}
   - component: {fileID: 801651741}
+  - component: {fileID: 801651742}
   m_Layer: 7
   m_Name: Mine
   m_TagString: Construction
@@ -11689,6 +11703,18 @@ MonoBehaviour:
   HealthBar: {fileID: 56659985}
   healthBarImage: {fileID: 806003945}
   HealthCanvas: {fileID: 859185194}
+--- !u!114 &801651742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801651737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e20a9c89a95e184f9d1574ca12c2e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectAdd
 --- !u!1 &806003943
 GameObject:
   m_ObjectHideFlags: 0
@@ -12143,6 +12169,7 @@ GameObject:
   - component: {fileID: 939591376}
   - component: {fileID: 939591375}
   - component: {fileID: 939591377}
+  - component: {fileID: 939591378}
   m_Layer: 7
   m_Name: FarmGroup
   m_TagString: Construction
@@ -12243,6 +12270,18 @@ MonoBehaviour:
   HealthBar: {fileID: 45855045}
   healthBarImage: {fileID: 668127233}
   HealthCanvas: {fileID: 18234897}
+--- !u!114 &939591378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939591374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e20a9c89a95e184f9d1574ca12c2e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectAdd
 --- !u!1 &976129380
 GameObject:
   m_ObjectHideFlags: 0
@@ -13604,6 +13643,7 @@ GameObject:
   - component: {fileID: 1483184444}
   - component: {fileID: 1483184445}
   - component: {fileID: 1483184446}
+  - component: {fileID: 1483184447}
   m_Layer: 7
   m_Name: HouseGroup
   m_TagString: Construction
@@ -13706,6 +13746,18 @@ PolygonCollider2D:
       - {x: 1.1538754, y: 0.95973897}
       - {x: 0.9164891, y: 0.98307985}
   m_UseDelaunayMesh: 1
+--- !u!114 &1483184447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483184442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e20a9c89a95e184f9d1574ca12c2e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectAdd
 --- !u!1 &1498037040
 GameObject:
   m_ObjectHideFlags: 0
@@ -14223,6 +14275,7 @@ GameObject:
   - component: {fileID: 1783290583}
   - component: {fileID: 1783290585}
   - component: {fileID: 1783290586}
+  - component: {fileID: 1783290587}
   m_Layer: 7
   m_Name: Barrack
   m_TagString: Construction
@@ -14387,6 +14440,18 @@ MonoBehaviour:
   healthBarImage: {fileID: 1212042917}
   HealthCanvas: {fileID: 488882610}
   rallyPos: {fileID: 687683996}
+--- !u!114 &1783290587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783290582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e20a9c89a95e184f9d1574ca12c2e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectAdd
 --- !u!1 &1785412611
 GameObject:
   m_ObjectHideFlags: 0
