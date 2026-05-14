@@ -89,7 +89,7 @@ public class EnemyController : MonoBehaviour
             rangeDistance = Vector2.Distance(gameObject.transform.position, target.transform.position);
         }
 
-        if (isLongRange == true && isFind && rangeDistance <= 5)
+        if (isLongRange == true && isFind && rangeDistance <= 5 && !isHasHit)
         {
 
             if (target != null)
@@ -101,6 +101,7 @@ public class EnemyController : MonoBehaviour
         else if(target != null && !isHasHit && !isClash && isMoving)
         {
             Vector2 dir = (target.position - transform.position).normalized;
+            
             rb.linearVelocity = dir * moveForce;
 
             float angle = Mathf.Atan2(dir.y ,dir.x) * Mathf.Rad2Deg;
@@ -268,7 +269,7 @@ public class EnemyController : MonoBehaviour
             {
                 damage = 0;
             }
-            
+
             friendlyController.OnFriendlyHit(damage, dir, pushForce);
         }
 
