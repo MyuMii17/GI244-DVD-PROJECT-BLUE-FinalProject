@@ -420,7 +420,7 @@ Transform:
   m_GameObject: {fileID: 6528993715996682080}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.32, y: 0.4728, z: 0}
+  m_LocalPosition: {x: -7.96, y: 4.04, z: 0}
   m_LocalScale: {x: 0.44, y: 0.44, z: 0.44}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -581,7 +581,16 @@ MonoBehaviour:
   clashDamage: 0
   skillRicochetCooldown: 5
   skillChargingCooldown: 6
+  healCooldown: 5
+  heal: 5
   isChargeSpawn: 0
+  isCanCharge: 0
+  chargeAccelerator: 0
+  chargeDamage: 0
+  currentChargeAccel: 0
+  currentChargeDamage: 0
+  currentDamageRecive: 0
+  isHasHit: 0
   cam: {fileID: 0}
   arrowPrefeb: {fileID: 3597376343583647123, guid: f7517e76269513243a39098208c7ddbd, type: 3}
   arrowFirstSkillPrefeb: {fileID: 7704097302792533319, guid: bd0a8cd93806978469ebfc883d756c72, type: 3}
@@ -591,13 +600,6 @@ MonoBehaviour:
   isPlayerCharging: 0
   pushForce: 0.5
   shootCharge: {fileID: 6631196705156015227}
-  isCanCharge: 0
-  chargeAccelerator: 0
-  chargeDamage: 0
-  currentChargeAccel: 0
-  currentChargeDamage: 0
-  currentDamageRecive: 0
-  isHasHit: 0
 --- !u!114 &4155841459585632016
 MonoBehaviour:
   m_ObjectHideFlags: 0

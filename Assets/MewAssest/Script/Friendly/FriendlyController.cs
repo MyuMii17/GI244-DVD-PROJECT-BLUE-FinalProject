@@ -57,6 +57,11 @@ public class FriendlyController : MonoBehaviour
         moveForce = rb.mass * acceleration;
 
         currentHealth = maxHealth;
+
+        if (isLongRange)
+        {
+            damage = 0;
+        }
     }
     void Update()
     {
@@ -171,8 +176,8 @@ public class FriendlyController : MonoBehaviour
 
         currentDamageRecived += damage;
         currentHealth-= damage;
-        cd.enabled = false;
         rb.linearVelocity = Vector2.zero;
+
         if (isHere)
         {
             rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
@@ -190,7 +195,6 @@ public class FriendlyController : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         rb.linearVelocity = Vector2.zero;
-        cd.enabled = true;
         isHasHit = false; 
     }
 
@@ -270,6 +274,11 @@ public class FriendlyController : MonoBehaviour
 
             enemyController.isHasHit = true;
 
+            if (isLongRange)
+            {
+                damage = 0;
+            }
+            
             enemyController.OnEnemyHit(damage, dir, gameObject.transform, pushForce);
         }
     }
