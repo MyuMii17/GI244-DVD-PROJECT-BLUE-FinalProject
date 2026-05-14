@@ -568,7 +568,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
 --- !u!50 &3164911513570174711
 Rigidbody2D:
@@ -621,6 +621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee796f3d6b876b144ba52de712e2ef88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FriendlyController
+  defPos: {fileID: 0}
   shootPosition: {fileID: 0}
   shootRoataion: {fileID: 0}
   arrowPrefeb: {fileID: 0}
@@ -634,8 +635,10 @@ MonoBehaviour:
   damage: 10
   isHasHit: 0
   isClash: 0
-  circleRange: 8.5
+  circleRange: 5
   isFind: 0
+  isDef: 0
+  isHere: 0
   isMoving: 0
   shootCooldown: 0
   isLongRange: 0

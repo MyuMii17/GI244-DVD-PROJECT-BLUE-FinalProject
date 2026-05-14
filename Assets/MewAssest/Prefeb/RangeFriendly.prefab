@@ -46,9 +46,9 @@ GameObject:
   - component: {fileID: 6013583994654358826}
   - component: {fileID: 4712718271698320581}
   - component: {fileID: 135983686285641317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RangeFriendly
-  m_TagString: Enemy
+  m_TagString: Friendly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62,7 +62,7 @@ Transform:
   m_GameObject: {fileID: 1057568917912371822}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.8, y: -7.9, z: 0}
+  m_LocalPosition: {x: -7.76, y: -0.85, z: 0}
   m_LocalScale: {x: 0.44, y: 0.44, z: 0.44}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -142,10 +142,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 193
+    m_Bits: 1
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 54
+    m_Bits: 246
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -214,9 +214,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee796f3d6b876b144ba52de712e2ef88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FriendlyController
+  defPos: {fileID: 0}
   shootPosition: {fileID: 2055260388838477340}
   shootRoataion: {fileID: 6127854249661690751}
-  arrowPrefeb: {fileID: 3597376343583647123, guid: f7517e76269513243a39098208c7ddbd, type: 3}
+  arrowPrefeb: {fileID: 3597376343583647123, guid: 622712e127cf7cb4c95e565d1f27b0c7, type: 3}
   mass: 1
   acceleration: 1
   linearDamp: 0
@@ -227,8 +228,10 @@ MonoBehaviour:
   damage: 5
   isHasHit: 0
   isClash: 0
-  circleRange: 7
+  circleRange: 10
   isFind: 0
+  isDef: 0
+  isHere: 0
   isMoving: 0
   shootCooldown: 3
   isLongRange: 1

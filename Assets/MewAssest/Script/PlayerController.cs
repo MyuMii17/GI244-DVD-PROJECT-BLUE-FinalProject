@@ -15,7 +15,16 @@ public class PlayerController : MonoBehaviour
     public float clashDamage = 0;
     public float skillRicochetCooldown = 5f;
     public float skillChargingCooldown = 6f;
+    public float healCooldown = 5f;
+    public float heal = 5f;
     public bool isChargeSpawn;
+    public bool isCanCharge;
+    public float chargeAccelerator;
+    public float chargeDamage;
+    public float currentChargeAccel;
+    public float currentChargeDamage;
+    public float currentDamageRecive;
+    public bool isHasHit;
     [Header("GameObject Setting")]
     public Camera cam;
     public GameObject arrowPrefeb;
@@ -26,6 +35,8 @@ public class PlayerController : MonoBehaviour
     public bool isPlayerCharging;
     public float pushForce;
     // Hidden Setting
+    private float nextHealTime;
+    private bool isHealSetTime;
     private float moveForce;
     private float nextShoot;
     private float currentRicochetCooldown;
@@ -42,13 +53,6 @@ public class PlayerController : MonoBehaviour
     private DefenceManager defenceManager;
     private static PlayerController staticInstance;
     private Coroutine OnChargingCoroutine;
-    public bool isCanCharge;
-    public float chargeAccelerator;
-    public float chargeDamage;
-    public float currentChargeAccel;
-    public float currentChargeDamage;
-    public float currentDamageRecive;
-    public bool isHasHit;
     private Coroutine onPlayerDamageCoroutine;
     public static PlayerController GetStatic()
     {
@@ -68,6 +72,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        nextHealTime = 0;
+
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         defenceManager = DefenceManager.GetStatic();
         isCanCharge = true;
@@ -94,6 +100,42 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         time = Time.time;
+
+        if(isHasHit != true)
+        {
+            if(isHealSetTime == false)
+            {
+                nextHealTime = time +  healCooldown;
+                isHealSetTime = true;
+            }
+
+            if(time >= nextHealTime && currentDamageRecive > 0)
+            {
+                currentDamageRecive -= heal;
+                if(currentHealth < maxHealth)
+                {
+                    currentHealth += heal;
+                }
+                
+                nextHealTime = time +  healCooldown;
+                isHealSetTime = true;
+
+                if(currentDamageRecive < 0)
+                {
+                    currentDamageRecive = 0;
+                }
+
+                if(currentHealth > maxHealth )
+                {
+                    currentHealth = maxHealth;
+                }
+            }
+        }
+        else
+        {
+            isHealSetTime = false;
+        }
+
         CharacterRotation();
         if ( AttackAction.triggered && time >= nextShoot && isHasHit == false && isPlayerCharging == false)
         {
@@ -138,7 +180,7 @@ public class PlayerController : MonoBehaviour
 
         Vector2 mouseDirection = lookAction.ReadValue<Vector2>();
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (setDefAction.WasReleasedThisFrame())
         {
             Ray ray = Camera.main.ScreenPointToRay(mouseDirection);
             Debug.DrawRay(ray.origin, ray.direction * 5, Color.red, 5f);
@@ -149,15 +191,59 @@ public class PlayerController : MonoBehaviour
             {
                 if(hit.collider.TryGetComponent(out FriendlyController friendlyController))
                 {
-                    if(friendlyController.isLongRange == true)
+                    var defRangePositions = defenceManager.defRangePositions;
+                    var hasSelectDefRange = defenceManager.hasSelectDefRange;
+
+                    var defNormalPositions = defenceManager.defNormalPositions;
+                    var hasSelectDefNormal = defenceManager.hasSelectDefNormal;
+                    if(friendlyController.isLongRange == true && friendlyController.isDef == false)
                     {
-                        int index = UnityEngine.Random.Range(0,defenceManager.defRangePositions.Count);
-                        defenceManager.hasSelectDefRange.Add(defenceManager.defRangePositions[index]);
-                        // defenceManager.defRangePositions.RemoveAt[];
+                        friendlyController.isDef = true;
+
+                        int index = UnityEngine.Random.Range(0,defRangePositions.Count);
+
+                        hasSelectDefRange.Add(defenceManager.defRangePositions[index]);
+
+                        friendlyController.defPos = defRangePositions[index];
+
+                        if(defRangePositions.Count > 0)
+                        {
+                            defRangePositions.RemoveAt(index);
+                        }
                     }
-                    else if (friendlyController.isLongRange == false)
+                    else if(friendlyController.isLongRange == true && friendlyController.isDef == true)
                     {
-                        int index = UnityEngine.Random.Range(0,defenceManager.defNormalPositions.Count);
+                        friendlyController.isDef = false;
+
+                        defRangePositions.Add(friendlyController.defPos);
+                        hasSelectDefRange.Remove(friendlyController.defPos);
+
+                        friendlyController.defPos = null;
+                    }
+
+                    if (friendlyController.isLongRange == false && friendlyController.isDef == false)
+                    {
+                        friendlyController.isDef = true;
+
+                        int index = UnityEngine.Random.Range(0,defNormalPositions.Count);
+
+                        hasSelectDefNormal.Add(defNormalPositions[index]);
+
+                        friendlyController.defPos = defNormalPositions[index];
+
+                        if(defNormalPositions.Count > 0)
+                        {
+                            defNormalPositions.RemoveAt(index);
+                        }
+                    }
+                    else if(friendlyController.isLongRange == false && friendlyController.isDef == true)
+                    {
+                        friendlyController.isDef = false;
+
+                        defNormalPositions.Add(friendlyController.defPos);
+                        hasSelectDefNormal.Remove(friendlyController.defPos);
+
+                        friendlyController.defPos = null;
                     }
                 }
                 

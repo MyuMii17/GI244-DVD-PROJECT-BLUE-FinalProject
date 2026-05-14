@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class DefenceManager : MonoBehaviour
 {
-    public List<Transform> defNormalPositions = new List<Transform>();
-    public List<Transform> hasSelectDefNormal = new List<Transform>();
-    public List<Transform> defRangePositions = new List<Transform>();
-    public List<Transform> hasSelectDefRange = new List<Transform>();
+    public List<GameObject> defNormalPositions = new List<GameObject>();
+    public List<GameObject> hasSelectDefNormal = new List<GameObject>();
+    public List<GameObject> defRangePositions = new List<GameObject>();
+    public List<GameObject> hasSelectDefRange = new List<GameObject>();
     private static DefenceManager StaticInstance = null;
     public static DefenceManager GetStatic()
     {
