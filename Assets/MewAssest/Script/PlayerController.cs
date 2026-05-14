@@ -1,7 +1,5 @@
+using System;
 using System.Collections;
-using System.Data.Common;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,8 +36,10 @@ public class PlayerController : MonoBehaviour
     private InputAction lookAction;
     private InputAction AttackAction;
     private InputAction ChargeAction;
+    private InputAction setDefAction;
     private Rigidbody2D rb;
     private Collider2D cd;
+    private DefenceManager defenceManager;
     private static PlayerController staticInstance;
     private Coroutine OnChargingCoroutine;
     public bool isCanCharge;
@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        defenceManager = DefenceManager.GetStatic();
         isCanCharge = true;
         currentHealth = maxHealth;
 
@@ -78,6 +79,7 @@ public class PlayerController : MonoBehaviour
         lookAction = InputSystem.actions.FindAction("look");
         AttackAction = InputSystem.actions.FindAction("Attack");
         ChargeAction = InputSystem.actions.FindAction("Charge");
+        setDefAction = InputSystem.actions.FindAction("SetDef");
         rb = gameObject.GetComponent<Rigidbody2D>();
         cd = gameObject.GetComponent<Collider2D>();
         rb.mass = mass;
@@ -133,6 +135,34 @@ public class PlayerController : MonoBehaviour
         {
             currentRicochetCooldown -= Time.deltaTime;
         }   
+
+        Vector2 mouseDirection = lookAction.ReadValue<Vector2>();
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(mouseDirection);
+            Debug.DrawRay(ray.origin, ray.direction * 5, Color.red, 5f);
+
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+
+            if (hit.collider != null)
+            {
+                if(hit.collider.TryGetComponent(out FriendlyController friendlyController))
+                {
+                    if(friendlyController.isLongRange == true)
+                    {
+                        int index = UnityEngine.Random.Range(0,defenceManager.defRangePositions.Count);
+                        defenceManager.hasSelectDefRange.Add(defenceManager.defRangePositions[index]);
+                        // defenceManager.defRangePositions.RemoveAt[];
+                    }
+                    else if (friendlyController.isLongRange == false)
+                    {
+                        int index = UnityEngine.Random.Range(0,defenceManager.defNormalPositions.Count);
+                    }
+                }
+                
+            }
+        }
 
     }
     public void OnPlayerHit(float damage , Vector2 dir, float push)

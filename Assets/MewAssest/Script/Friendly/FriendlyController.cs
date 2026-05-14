@@ -6,8 +6,11 @@ public class FriendlyController : MonoBehaviour
     private Collider2D cd;
     private Rigidbody2D rb;
     private Transform target;
+    private float rangeDistance;
     public Transform shootPosition;
     public Transform shootRoataion;
+    public GameObject arrowPrefeb;
+    private LayerMask defaultLayer;
     public float mass = 1f;
     public float acceleration = 2f;
     public float linearDamp = 0f;
@@ -20,8 +23,15 @@ public class FriendlyController : MonoBehaviour
     public bool isHasHit;
     public bool isClash;
     public float circleRange = 5;
+    public bool isFind;
 
     public bool isMoving;
+
+    [Header("Range Friendly")]
+    public float shootCooldown;
+    private float nextShoot;
+
+    public bool isLongRange;
 
     private Coroutine onFriendlyDamageCoroutine;
 
@@ -29,6 +39,7 @@ public class FriendlyController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         cd = GetComponent<Collider2D>();
+        defaultLayer = LayerMask.GetMask("Default");
         shootRoataion = transform.GetChild(0).transform;
         shootPosition = shootRoataion.transform.GetChild(0).transform.GetChild(0).transform;
 
@@ -54,9 +65,22 @@ public class FriendlyController : MonoBehaviour
 
     void GoToTarget()
     {
-        target = FindClosest();
+        FindClosest();
 
-        if(target != null && isHasHit == false && isClash == false && isMoving == true)
+        if (target != null)
+        {
+            rangeDistance = Vector2.Distance(gameObject.transform.position, target.transform.position);
+        }
+
+        if (isLongRange == true && isFind && rangeDistance <= 5)
+        {
+            if (target != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                Shoot();
+            }
+        }
+        else if(target != null && !isHasHit && !isClash && isMoving)
         {
             Vector2 dir = (target.position - transform.position).normalized;
             rb.linearVelocity = dir * moveForce;
@@ -94,7 +118,8 @@ public class FriendlyController : MonoBehaviour
             
             currentHealth = maxHealth;
             currentDamageRecived = 0;
-            FriendliesPool.GetInstance().ReturnFriend(this.gameObject);
+            // FriendliesPool.GetInstance().ReturnFriend(this.gameObject);
+            Destroy(gameObject);
         }
 
         yield return new WaitForSeconds(1);
@@ -104,12 +129,13 @@ public class FriendlyController : MonoBehaviour
         isHasHit = false; 
     }
 
-    private Transform FindClosest()
+    private void FindClosest()
     {
-        float minDistance = circleRange;
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, circleRange);
+        if(ObjectManager.objects.Count == 0) return;
 
+        float minDistance = circleRange;
         Transform closest = null;
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, circleRange);
 
         foreach (var enemy in enemies)
         {
@@ -125,14 +151,46 @@ public class FriendlyController : MonoBehaviour
                     closest = enemy.transform;
                 }
             }
+        } 
+
+        if(closest != null)
+        {
+            isFind = true;
+            target = closest;
         }
-        return closest;
+        else
+        {
+            isFind = false;
+        }
     }
     
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, circleRange);
+    }
+
+    void Shoot()
+    {
+        var targetPosition = target.transform.position;
+
+        var dir = (targetPosition - transform.position).normalized;
+
+        float angle = Mathf.Atan2(dir.y ,dir.x) * Mathf.Rad2Deg;
+
+        shootRoataion.transform.rotation = Quaternion.Euler(0, 0, angle); 
+        
+        if (Time.time >= nextShoot)
+        {
+            var arrow = Instantiate(
+                arrowPrefeb,
+                shootPosition.position,
+                shootPosition.rotation
+            );
+            Destroy(arrow, 2);
+            nextShoot = Time.time + shootCooldown;
+        }
+
     }
 
     void OnCollisionEnter2D(Collision2D collision)
