@@ -1,11 +1,15 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FriendlyController : MonoBehaviour
 {
+    private float nextHealTime;
+    private bool isHealSetTime;
     private Collider2D cd;
     private Rigidbody2D rb;
     private Transform target;
+    public GameObject defPos;
     private float rangeDistance;
     public Transform shootPosition;
     public Transform shootRoataion;
@@ -20,10 +24,14 @@ public class FriendlyController : MonoBehaviour
     public float currentHealth;
     public float currentDamageRecived;
     public float damage = 10;
+    public float healCooldown = 5f;
+    public float heal = 5f;
     public bool isHasHit;
     public bool isClash;
     public float circleRange = 5;
     public bool isFind;
+    public bool isDef;
+    public bool isHere;
 
     public bool isMoving;
 
@@ -52,6 +60,8 @@ public class FriendlyController : MonoBehaviour
     }
     void Update()
     {
+        var time = Time.time;
+
         if(isHasHit == false && isClash == false)
         {
             isMoving = true;
@@ -60,6 +70,41 @@ public class FriendlyController : MonoBehaviour
         else
         {
             isMoving = false;
+        }
+
+        if(isHasHit != true)
+        {
+            if(isHealSetTime == false)
+            {
+                nextHealTime = time +  healCooldown;
+                isHealSetTime = true;
+            }
+
+            if(time >= nextHealTime && currentDamageRecived > 0)
+            {
+                currentDamageRecived -= heal;
+                if(currentHealth < maxHealth)
+                {
+                    currentHealth += heal;
+                }
+                
+                nextHealTime = time +  healCooldown;
+                isHealSetTime = true;
+
+                if(currentDamageRecived < 0)
+                {
+                    currentDamageRecived = 0;
+                }
+
+                if(currentHealth > maxHealth )
+                {
+                    currentHealth = maxHealth;
+                }
+            }
+        }
+        else
+        {
+            isHealSetTime = false;
         }
     }
 
@@ -83,12 +128,29 @@ public class FriendlyController : MonoBehaviour
         else if(target != null && !isHasHit && !isClash && isMoving)
         {
             Vector2 dir = (target.position - transform.position).normalized;
-            rb.linearVelocity = dir * moveForce;
+
+            if (!isDef)
+            {
+                rb.linearVelocity = dir * moveForce;
+            }
 
             float angle = Mathf.Atan2(dir.y ,dir.x) * Mathf.Rad2Deg;
             shootRoataion.transform.rotation = Quaternion.Euler(0, 0, angle); 
         }
         else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        if (isDef && defPos != null && !isHasHit && !isClash && isMoving && !isHere)
+        {
+            Vector2 defDir = (defPos.transform.position - transform.position).normalized;
+            rb.linearVelocity = defDir * moveForce;
+            
+            float defAngle = Mathf.Atan2(defDir.y ,defDir.x) * Mathf.Rad2Deg;
+            shootRoataion.transform.rotation = Quaternion.Euler(0, 0, defAngle); 
+        }
+        else if (isDef && defPos != null && isHere)
         {
             rb.linearVelocity = Vector2.zero;
         }
@@ -111,7 +173,10 @@ public class FriendlyController : MonoBehaviour
         currentHealth-= damage;
         cd.enabled = false;
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
+        if (isHere)
+        {
+            rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
+        }
 
         if(currentDamageRecived >= maxHealth)
         {
