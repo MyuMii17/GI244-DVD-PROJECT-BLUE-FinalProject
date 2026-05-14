@@ -75,6 +75,7 @@ public class ArrowRicochet : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        Destroy(gameObject,2);
         
     }
 
