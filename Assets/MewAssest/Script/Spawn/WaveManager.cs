@@ -17,7 +17,7 @@ public class WaveManager : MonoBehaviour
     }
     void Update()
     {
-        if (currentWave > 2)
+        if (currentWave > 1)
         {
             Time.timeScale = 0;
         }
@@ -33,7 +33,11 @@ public class WaveManager : MonoBehaviour
             yield return new WaitUntil(() => spawnManager.IsCompleted());
 
             currentWave++;
-            currentDelay = waves[currentWave].DelayStart;
+
+            if(currentWave < waves.Count)
+            {
+                currentDelay = waves[currentWave].DelayStart;
+            }
 
             yield return null;
 
