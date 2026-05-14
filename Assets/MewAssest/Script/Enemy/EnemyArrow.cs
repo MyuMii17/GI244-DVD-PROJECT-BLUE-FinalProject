@@ -43,6 +43,14 @@ public class EnemyArrow : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+
+        if(collision.gameObject.TryGetComponent(out BuildingClass buildingClass))
+        {
+            var dir = gameObject.transform.position - buildingClass.transform.position;
+            dir.Normalize();
+            
+            // buildingClass.OnConstructionHit(damage, dir, pushForce);
+        }
     }
     void FixedUpdate()
     {

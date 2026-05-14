@@ -33,6 +33,11 @@ public class Arrow : MonoBehaviour
             }
             Destroy(gameObject);
         }
+
+        if (collision.CompareTag("Construction"))
+        {
+            Destroy(gameObject);
+        }
     }
     void FixedUpdate()
     {

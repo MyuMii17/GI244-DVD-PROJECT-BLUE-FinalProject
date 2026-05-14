@@ -17,7 +17,7 @@ public class WaveManager : MonoBehaviour
     }
     void Update()
     {
-        if (currentWave > 4)
+        if (currentWave > 2)
         {
             Time.timeScale = 0;
         }

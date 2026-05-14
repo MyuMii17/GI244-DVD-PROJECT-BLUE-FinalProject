@@ -101,7 +101,7 @@ public class EnemyController : MonoBehaviour
         else if(target != null && !isHasHit && !isClash && isMoving)
         {
             Vector2 dir = (target.position - transform.position).normalized;
-            
+
             rb.linearVelocity = dir * moveForce;
 
             float angle = Mathf.Atan2(dir.y ,dir.x) * Mathf.Rad2Deg;
@@ -287,6 +287,22 @@ public class EnemyController : MonoBehaviour
             }
 
             playerController.OnPlayerHit(damage, dir, pushForce);
+        }
+
+        if(collision.gameObject.TryGetComponent(out BuildingClass buildingClass))
+        {
+            isClash = true;
+            isHasHit = true; 
+
+            var dir = gameObject.transform.position - buildingClass.transform.position;
+            dir.Normalize();
+            
+            if (isLongRange)
+            {
+                damage = 0;
+            }
+
+            // buildingClass.OnConstructionHit(damage, dir, pushForce);
         }
     }
     void OnCollisionExit2D(Collision2D collision)

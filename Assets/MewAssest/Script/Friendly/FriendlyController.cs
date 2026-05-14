@@ -176,7 +176,7 @@ public class FriendlyController : MonoBehaviour
         currentHealth-= damage;
         rb.linearVelocity = Vector2.zero;
 
-        if (isHere)
+        if (!isHere)
         {
             rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
         }

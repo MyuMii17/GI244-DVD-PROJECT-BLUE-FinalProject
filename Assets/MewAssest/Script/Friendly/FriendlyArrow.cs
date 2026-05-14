@@ -32,6 +32,11 @@ public class FriendlyArrow : MonoBehaviour
             }
             Destroy(gameObject);
         }
+
+        if (collision.CompareTag("Construction"))
+        {
+            Destroy(gameObject);
+        }
     }
     void FixedUpdate()
     {

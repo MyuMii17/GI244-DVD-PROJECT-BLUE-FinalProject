@@ -100,7 +100,9 @@ public class SpawnManager : MonoBehaviour
                 );
                 totalEnemies++;
                 normalEnemy++;
-                yield return new WaitForSeconds(wave.normalSpawnInterval);
+                
+                yield return new WaitForSeconds(wave.spawnInterval);
+
             }
 
             if(rangeEnemy < wave.rangeEnemySpawn)
@@ -113,7 +115,8 @@ public class SpawnManager : MonoBehaviour
                 );
                 totalEnemies++;
                 rangeEnemy++;
-                yield return new WaitForSeconds(wave.rangeEnemySpawn);
+
+                yield return new WaitForSeconds(wave.spawnInterval);
             }
         }
     }
