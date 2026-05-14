@@ -6,7 +6,6 @@ public class FriendlyController : MonoBehaviour
 {
     private float nextHealTime;
     private bool isHealSetTime;
-    private Collider2D cd;
     private Rigidbody2D rb;
     private Transform target;
     public GameObject defPos;
@@ -38,7 +37,6 @@ public class FriendlyController : MonoBehaviour
     [Header("Range Friendly")]
     public float shootCooldown;
     private float nextShoot;
-
     public bool isLongRange;
 
     private Coroutine onFriendlyDamageCoroutine;
@@ -46,7 +44,6 @@ public class FriendlyController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        cd = GetComponent<Collider2D>();
         defaultLayer = LayerMask.GetMask("Default");
         shootRoataion = transform.GetChild(0).transform;
         shootPosition = shootRoataion.transform.GetChild(0).transform.GetChild(0).transform;
@@ -122,7 +119,8 @@ public class FriendlyController : MonoBehaviour
             rangeDistance = Vector2.Distance(gameObject.transform.position, target.transform.position);
         }
 
-        if (isLongRange == true && isFind && rangeDistance <= 5)
+        
+        if (isLongRange == true && isFind && rangeDistance <= 5 && isHasHit == false)
         {
             if (target != null)
             {

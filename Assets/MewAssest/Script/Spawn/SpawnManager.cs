@@ -8,11 +8,14 @@ public class SpawnManager : MonoBehaviour
     private Wave wave;
     private static SpawnManager StaticInstance = null;
     public List<Transform> spawnPoint = new List<Transform>();
-    public List<GameObject> enemiesPerfebs = new List<GameObject>();
+    public GameObject normalEnemies;
+    public GameObject rangeEnemies;
     [SerializeField]private WaveManager waveManager;
     public List<Transform> spawnPointSelects;
     public bool canSpawnEnemies;
     public bool isStart;
+    public int normalEnemy;
+    public int rangeEnemy;
     public int totalEnemies;
     public int enemiesDead;
     public float nextSpawnTime;
@@ -41,6 +44,8 @@ public class SpawnManager : MonoBehaviour
 
         isStart = true;
         totalEnemies = 0;
+        normalEnemy = 0;
+        rangeEnemy = 0;
 
         enemiesDead = 0;
 
@@ -50,14 +55,14 @@ public class SpawnManager : MonoBehaviour
 
     public bool IsCompleted()
     {
-        return enemiesDead >= wave.totalSpawnEnemies;
+        return enemiesDead >= wave.totalEnemySpawn;
     }
 
     void Update()
     {
         if (isStart)
         {
-            if (totalEnemies < wave.totalSpawnEnemies)
+            if (totalEnemies < wave.totalEnemySpawn)
             {
                 canSpawnEnemies = true;
             }
@@ -85,14 +90,31 @@ public class SpawnManager : MonoBehaviour
     {
         while (canSpawnEnemies)
         {
-            var point = Random.Range(0, wave.numberOfRandomSpawnPoint);
-            Instantiate(
-                enemiesPerfebs[0], 
-                spawnPointSelects[point].position, 
-                Quaternion.identity
-            );
-            totalEnemies++;
-            yield return new WaitForSeconds(wave.spawnInterval);
+            if(normalEnemy < wave.normalEnemySpawn)
+            {
+                var point = Random.Range(0, wave.numberOfRandomSpawnPoint);
+                Instantiate(
+                    normalEnemies, 
+                    spawnPointSelects[point].position, 
+                    Quaternion.identity
+                );
+                totalEnemies++;
+                normalEnemy++;
+                yield return new WaitForSeconds(wave.normalSpawnInterval);
+            }
+
+            if(rangeEnemy < wave.rangeEnemySpawn)
+            {
+                var point = Random.Range(0, wave.numberOfRandomSpawnPoint);
+                Instantiate(
+                    rangeEnemies, 
+                    spawnPointSelects[point].position, 
+                    Quaternion.identity
+                );
+                totalEnemies++;
+                rangeEnemy++;
+                yield return new WaitForSeconds(wave.rangeEnemySpawn);
+            }
         }
     }
 }
