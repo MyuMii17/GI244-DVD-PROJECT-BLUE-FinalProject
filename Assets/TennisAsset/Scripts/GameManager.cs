@@ -7,15 +7,18 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-
+    private InputAction repair;
     InputAction inputAction;
     bool isGameEnd;
     [field: SerializeField] protected List<BuildingClass> buildingList = new List<BuildingClass>();
     public TMP_Text GoldText;
     public TMP_Text FoodText;
     public TMP_Text CitizenText;
+    private bool isFixSetTime;
+    private float nextFixTime;
     private void Awake()
     {
+        repair = InputSystem.actions.FindAction("Interact");
         inputAction = InputSystem.actions.FindAction("Jump");
         InitAllBuilding();
     }
@@ -46,6 +49,7 @@ public class GameManager : MonoBehaviour
             FoodText.text = Resource.GetInstance().Food.ToString();
             CitizenText.text = Resource.GetInstance().Citizen.ToString();
         }
+        RepairCooldown();
     }
 
 
@@ -88,7 +92,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    public void AllBuildingRepair()
+    {
+        foreach(var building in buildingList)
+        {
+            building.Repair();
+        }
+    }
+
+    void RepairCooldown()
+    {
+        var fixCooldown = 10f;
+        if (isFixSetTime == false)
+        {
+            isFixSetTime = true;
+            nextFixTime = Time.time + fixCooldown;
+        }
+
+        if (repair.IsPressed() && Time.time >= nextFixTime)
+        {
+            Debug.Log("E");
+            AllBuildingRepair();
+            nextFixTime = Time.time + fixCooldown;
+        }
+    }
 
     public void HouseBuildButton()
     {
