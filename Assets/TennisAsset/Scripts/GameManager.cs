@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
         Resource.GetInstance().Food = 50;
         Resource.GetInstance().Citizen = 0;
         buildingList[5].Build();
+        
     }
 
     // Update is called once per frame

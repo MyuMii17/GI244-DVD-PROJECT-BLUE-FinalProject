@@ -21,8 +21,6 @@ public class Resource : MonoBehaviour
             return;
         }
 
-        DontDestroyOnLoad(this.gameObject);
-
         ResourceInstance = this;
 
         MaxCitizen = 30;

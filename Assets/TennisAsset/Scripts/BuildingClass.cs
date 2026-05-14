@@ -7,6 +7,7 @@ public abstract class BuildingClass : MonoBehaviour
     public int FoodRequire { get; protected set; }
 
     [field: SerializeField] protected GameObject HealthBar;
+
     public Image healthBarImage;
     public Canvas HealthCanvas;
     public int ProduceAmount { get; protected set; }
@@ -19,8 +20,8 @@ public abstract class BuildingClass : MonoBehaviour
     {
         HealthBar.transform.position = new Vector2(transform.position.x, transform.position.y + 0.8f);
         gameObject.SetActive(false);
-        HealthCanvas.enabled = false;
-
+        HealthBar.SetActive(true);
+        
     }
 
     private void Update()
@@ -32,11 +33,11 @@ public abstract class BuildingClass : MonoBehaviour
         }
         if (this.currentHealth < this.MaxHealth)
         {
-            HealthCanvas.enabled = true;
+            HealthBar.SetActive(true);
         }
         else
         {
-            HealthCanvas.enabled = false;
+            HealthBar.SetActive(false);
         }
     }
 
