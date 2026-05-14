@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3799730745459359490}
   - component: {fileID: 4114508590695528509}
   - component: {fileID: 4997043994680233513}
-  - component: {fileID: 3491447621771100826}
+  - component: {fileID: 2097403871500102431}
   m_Layer: 0
   m_Name: FriendlyArrow
   m_TagString: Arrow
@@ -167,7 +167,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3491447621771100826
+--- !u!114 &2097403871500102431
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,9 +176,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3597376343583647123}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c2b7324714c0854a900b06c0de5b13f, type: 3}
+  m_Script: {fileID: 11500000, guid: 93859fd2619acd84693b6c9772ca84f0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Arrow
+  m_EditorClassIdentifier: Assembly-CSharp::FriendlyArrow
   mass: 1
   acceleration: 10
   linearDamp: 0

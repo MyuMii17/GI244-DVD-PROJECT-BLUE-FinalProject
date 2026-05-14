@@ -626,13 +626,15 @@ MonoBehaviour:
   shootRoataion: {fileID: 0}
   arrowPrefeb: {fileID: 0}
   mass: 1
-  acceleration: 2
+  acceleration: 1
   linearDamp: 0
   pushForce: 0.5
   maxHealth: 50
   currentHealth: 0
   currentDamageRecived: 0
   damage: 10
+  healCooldown: 5
+  heal: 5
   isHasHit: 0
   isClash: 0
   circleRange: 5

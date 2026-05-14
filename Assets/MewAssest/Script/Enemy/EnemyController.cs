@@ -56,6 +56,11 @@ public class EnemyController : MonoBehaviour
         
         shootRoataion = transform.GetChild(0).transform;
         shootPosition = shootRoataion.transform.GetChild(0).transform.GetChild(0).transform;
+
+        if (isLongRange)
+        {
+            damage = 0;
+        }
     }
     void Update()
     {
@@ -118,7 +123,6 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator EnemyTakeDamage(float damage , Vector2 dir, Transform transform, float push)
     {
-
         currentDamageRecived += damage;
         currentHealth -= damage;
         if (!transform.CompareTag("Construction"))
@@ -126,7 +130,6 @@ public class EnemyController : MonoBehaviour
             target = transform;
         }
         
-        cd.enabled = false;
         rb.linearVelocity = Vector2.zero;
 
         rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
@@ -140,7 +143,6 @@ public class EnemyController : MonoBehaviour
         yield return new WaitForSeconds(1);
 
         rb.linearVelocity = Vector2.zero;
-        cd.enabled = true;
         isHasHit = false;
     }
 
@@ -262,6 +264,11 @@ public class EnemyController : MonoBehaviour
             var dir = gameObject.transform.position - friendlyController.transform.position;
             dir.Normalize();
 
+            if (isLongRange)
+            {
+                damage = 0;
+            }
+            
             friendlyController.OnFriendlyHit(damage, dir, pushForce);
         }
 
@@ -273,6 +280,11 @@ public class EnemyController : MonoBehaviour
             var dir = gameObject.transform.position - playerController.transform.position;
             dir.Normalize();
             
+            if (isLongRange)
+            {
+                damage = 0;
+            }
+
             playerController.OnPlayerHit(damage, dir, pushForce);
         }
     }
