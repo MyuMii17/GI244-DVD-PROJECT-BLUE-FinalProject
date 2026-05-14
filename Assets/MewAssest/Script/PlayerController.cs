@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private float currentRicochetCooldown;
     private float time;
     [SerializeField] private GameObject shootCharge;
+    private GameStateManager gameStateManager;
     private CameraController cameraController;
     private InputAction moveAction;
     private InputAction lookAction;
@@ -82,6 +83,7 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
 
         cameraController = CameraController.GetStatic();
+        gameStateManager = GameStateManager.GetStatic();
 
         moveAction = InputSystem.actions.FindAction("Move");
         lookAction = InputSystem.actions.FindAction("look");
@@ -179,7 +181,11 @@ public class PlayerController : MonoBehaviour
         if(currentRicochetCooldown > 0)
         {
             currentRicochetCooldown -= Time.deltaTime;
-        }   
+        }
+        else
+        {
+            gameStateManager.isSkillCooldown = false;
+        }
 
         Vector2 mouseDirection = lookAction.ReadValue<Vector2>();
 
@@ -354,6 +360,8 @@ public class PlayerController : MonoBehaviour
             shootPos.rotation
         );
         currentRicochetCooldown = skillRicochetCooldown;
+        gameStateManager.skillCoolDownCount = skillRicochetCooldown;
+        gameStateManager.isSkillCooldown = true;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
