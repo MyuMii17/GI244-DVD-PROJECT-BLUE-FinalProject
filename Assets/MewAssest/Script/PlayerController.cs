@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     private InputAction AttackAction;
     private InputAction ChargeAction;
     private InputAction setDefAction;
+    private InputAction repairAction;
     private Rigidbody2D rb;
     private Collider2D cd;
     private DefenceManager defenceManager;
@@ -86,6 +87,7 @@ public class PlayerController : MonoBehaviour
         AttackAction = InputSystem.actions.FindAction("Attack");
         ChargeAction = InputSystem.actions.FindAction("Charge");
         setDefAction = InputSystem.actions.FindAction("SetDef");
+        repairAction = InputSystem.actions.FindAction("Interact");
         rb = gameObject.GetComponent<Rigidbody2D>();
         cd = gameObject.GetComponent<Collider2D>();
         rb.mass = mass;
@@ -364,6 +366,23 @@ public class PlayerController : MonoBehaviour
 
             enemyController.isHasHit = true;
             enemyController.OnEnemyHit(clashDamage, dir, gameObject.transform, pushForce);
+        }
+
+        
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out BuildingClass buildingClass))
+        {
+            var fixCooldown = 1f;
+            var nextFixTime = Time.time + fixCooldown;
+            if (repairAction.WasPressedThisFrame() && Time.time >= nextFixTime)
+            {
+                Debug.Log("Repairing... Current Health: " + currentHealth);
+                buildingClass.Repair();
+                nextFixTime = Time.time + fixCooldown;
+            }
         }
     }
 }
