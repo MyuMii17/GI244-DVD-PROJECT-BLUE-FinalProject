@@ -221,11 +221,13 @@ MonoBehaviour:
   mass: 1
   acceleration: 1
   linearDamp: 0
-  pushForce: 0.25
+  pushForce: 1
   maxHealth: 20
   currentHealth: 0
   currentDamageRecived: 0
   damage: 5
+  healCooldown: 5
+  heal: 5
   isHasHit: 0
   isClash: 0
   circleRange: 10

@@ -626,7 +626,7 @@ MonoBehaviour:
   shootRoataion: {fileID: 0}
   arrowPrefeb: {fileID: 0}
   mass: 1
-  acceleration: 1
+  acceleration: 2
   linearDamp: 0
   pushForce: 0.5
   maxHealth: 50

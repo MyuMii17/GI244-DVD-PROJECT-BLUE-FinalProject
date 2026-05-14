@@ -8,6 +8,7 @@ public class GameStateManager : MonoBehaviour
     public bool isPlayerDead;
     private float nextSpawnTime;
     private bool isSpawnTimeSet;
+    public bool isGameOver;
 
     private static GameStateManager StaticInstance = null;
     public static GameStateManager GetStatic()
@@ -51,6 +52,11 @@ public class GameStateManager : MonoBehaviour
         else
         {
             isSpawnTimeSet = false;
+        }
+
+        if(ObjectManager.objects.Count == 0)
+        {
+            isGameOver = true;
         }
     }
 }
