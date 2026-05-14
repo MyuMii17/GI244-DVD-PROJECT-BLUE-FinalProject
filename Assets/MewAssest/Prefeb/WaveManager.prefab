@@ -44,16 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29fb5239a2815c044ba2e4140f15e468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WavManager
-  spawnManager: {fileID: 0}
+  spawnManager: {fileID: 34200832428102615, guid: 180b5e3d10305c44689be59dfd93e40b, type: 3}
   waves:
-  - totalSpawnEnemies: 2
-    numberOfRandomSpawnPoint: 1
+  - normalEnemySpawn: 1
+    rangeEnemySpawn: 1
+    totalEnemySpawn: 2
+    numberOfRandomSpawnPoint: 2
     DelayStart: 1
     spawnInterval: 2
     enemiesDead: 0
-  - totalSpawnEnemies: 3
+  - normalEnemySpawn: 1
+    rangeEnemySpawn: 2
+    totalEnemySpawn: 3
     numberOfRandomSpawnPoint: 3
-    DelayStart: 1
+    DelayStart: 5
     spawnInterval: 2
     enemiesDead: 0
   currentDelay: 0

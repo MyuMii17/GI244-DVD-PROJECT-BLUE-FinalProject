@@ -144,12 +144,14 @@ MonoBehaviour:
   - {fileID: 7653105386310649015}
   - {fileID: 1686486949554257366}
   - {fileID: 5859434124654956155}
-  enemiesPerfebs:
-  - {fileID: 3700248994701308135, guid: add70c7f31cfb9f4e86a9978554fed01, type: 3}
-  waveManager: {fileID: 0}
+  normalEnemies: {fileID: 3700248994701308135, guid: add70c7f31cfb9f4e86a9978554fed01, type: 3}
+  rangeEnemies: {fileID: 2491834487821631328, guid: f60d9a297a083c04b80225a30786fa79, type: 3}
+  waveManager: {fileID: 4379807791442846757, guid: 18a13fb7f50815643a9c6700834e9fbe, type: 3}
   spawnPointSelects: []
   canSpawnEnemies: 0
   isStart: 0
+  normalEnemy: 0
+  rangeEnemy: 0
   totalEnemies: 0
   enemiesDead: 0
   nextSpawnTime: 0

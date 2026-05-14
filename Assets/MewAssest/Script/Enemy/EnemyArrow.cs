@@ -48,8 +48,13 @@ public class EnemyArrow : MonoBehaviour
         {
             var dir = gameObject.transform.position - buildingClass.transform.position;
             dir.Normalize();
-            
+
             // buildingClass.OnConstructionHit(damage, dir, pushForce);
+        }
+
+        if (collision.CompareTag("Construction"))
+        {
+            Destroy(gameObject);
         }
     }
     void FixedUpdate()
