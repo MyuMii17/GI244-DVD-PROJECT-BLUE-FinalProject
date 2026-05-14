@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     InputAction inputAction;
     bool isGameEnd;
     [field: SerializeField] protected List<BuildingClass> buildingList = new List<BuildingClass>();
-
     public TMP_Text GoldText;
     public TMP_Text FoodText;
     public TMP_Text CitizenText;
@@ -85,9 +84,11 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(2f);
             BuildingsOuput();
+           
         }
     }
 
+    
 
     public void HouseBuildButton()
     {
@@ -113,4 +114,5 @@ public class GameManager : MonoBehaviour
     {
         buildingList[4].Build();
     }
+    
 }
