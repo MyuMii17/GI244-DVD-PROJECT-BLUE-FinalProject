@@ -17,9 +17,7 @@ public abstract class BuildingClass : MonoBehaviour
     public bool IsBuilt { get; protected set; }
 
     private float currentHealth;
-    public float MaxHealth { get; protected set; }
-
-    
+    public float MaxHealth { get; protected set; } 
 
     private void Awake()
     {
@@ -113,5 +111,7 @@ public abstract class BuildingClass : MonoBehaviour
         }
 
     }
+
+    
 
 }
