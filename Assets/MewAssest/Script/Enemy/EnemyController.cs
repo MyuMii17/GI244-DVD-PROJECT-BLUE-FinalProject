@@ -288,32 +288,20 @@ public class EnemyController : MonoBehaviour
 
             playerController.OnPlayerHit(damage, dir, pushForce);
         }
-
-        if(collision.gameObject.TryGetComponent(out BuildingClass buildingClass))
-        {
-            isClash = true;
-            isHasHit = true; 
-
-            var dir = gameObject.transform.position - buildingClass.transform.position;
-            dir.Normalize();
-            
-            if (isLongRange)
-            {
-                damage = 0;
-            }
-
-            // buildingClass.OnConstructionHit(damage, dir, pushForce);
-        }
     }
     void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Friendly"))    
         {
-            isClash = false;;
+            isClash = false;
         }
         if (collision.gameObject.CompareTag("Player"))    
         {
-            isClash = false;;
+            isClash = false;
+        }
+        if (collision.gameObject.CompareTag("Construction"))
+        {
+            isClash = false;
         }
     }
 }
