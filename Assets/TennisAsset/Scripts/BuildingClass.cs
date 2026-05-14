@@ -1,27 +1,28 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public abstract class BuildingClass : MonoBehaviour
 {
     public int GoldRequire { get; protected set; }
     public int FoodRequire { get; protected set; }
 
-    private InputAction repair;
+
 
     [field: SerializeField] protected GameObject HealthBar;
 
-    public Image healthBarImage;
+    public UnityEngine.UI.Image healthBarImage;
     public Canvas HealthCanvas;
     public int ProduceAmount { get; protected set; }
     public bool IsBuilt { get; protected set; }
 
     private float currentHealth;
-    public float MaxHealth { get; protected set; } 
+    public float MaxHealth { get; protected set; }
 
     private void Awake()
     {
-        repair = InputSystem.actions.FindAction("Interact");
+
         HealthBar.transform.position = new Vector2(transform.position.x, transform.position.y + 0.8f);
         gameObject.SetActive(false);
         HealthBar.SetActive(true);
@@ -76,12 +77,9 @@ public abstract class BuildingClass : MonoBehaviour
 
     public void Repair()
     {
-        currentHealth += 10;
+        
+        currentHealth += 50;
         Debug.Log("Repairing... Current Health: " + currentHealth);
-        if (currentHealth > MaxHealth)
-        {
-            currentHealth = MaxHealth;
-        }
 
     }
 
@@ -95,6 +93,9 @@ public abstract class BuildingClass : MonoBehaviour
 
         }
     }
+
+    
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
