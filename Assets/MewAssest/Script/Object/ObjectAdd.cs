@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class ObjectAdd : MonoBehaviour
 {
+
     void OnEnable()
     {
         ObjectManager.objects.Add(gameObject.transform);
