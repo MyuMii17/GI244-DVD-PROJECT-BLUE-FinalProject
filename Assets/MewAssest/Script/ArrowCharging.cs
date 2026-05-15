@@ -1,0 +1,77 @@
+using System;
+using System.Collections;
+using UnityEngine;
+
+public class ArrowChargingSkill : MonoBehaviour
+{
+    public float mass = 1f;
+    private float acceleration;
+    public float linearDamp = 0f;
+    public float arrowDamage = 20f;
+
+    private float arrowForce;
+    private bool isCharging;
+    public bool isCanCharging;
+    private Rigidbody2D rb;
+    public bool canShoot;
+    private BoxCollider2D bc;
+    private Coroutine OnArrowChargingCoroutine;
+    private PlayerController playerController;
+
+    void Start()
+    {
+        playerController = PlayerController.GetStatic();
+        bc = GetComponent<BoxCollider2D>();
+        rb = gameObject.GetComponent<Rigidbody2D>();
+        acceleration = 5f;
+        canShoot = false;
+        rb.mass = mass;
+        rb.linearDamping = linearDamp;
+    }
+    void Update()
+    {
+        if(playerController.isPlayerCharging == true)
+        {
+            isCanCharging = true;
+        }
+        else
+        {
+            isCanCharging = false;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Enemy"))
+        {
+            EnemyController enemyController = collision.GetComponent<EnemyController>();
+            if(enemyController != null)
+            {
+                var dir = transform.position - enemyController.transform.position;
+                dir.Normalize();
+                arrowForce/= 2;
+                enemyController.isHasHit = true;
+                enemyController.isPlayerHit = true;
+                enemyController.OnEnemyHit(arrowDamage, dir, PlayerManager.players[0], arrowForce);
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        StartCoroutine(onChargeSpawn());
+        Destroy(gameObject,2f);
+    }
+
+    IEnumerator onChargeSpawn()
+    {
+        acceleration = playerController.currentChargeAccel;
+        arrowForce = rb.mass * acceleration;
+        arrowDamage = playerController.currentChargeDamage;
+
+        rb.AddForce(transform.right * arrowForce, ForceMode2D.Impulse);
+
+        yield return null;
+    }
+
+}

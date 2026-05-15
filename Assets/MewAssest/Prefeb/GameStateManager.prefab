@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2692221168130469982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3135645059178986305}
+  - component: {fileID: 2776755906198730375}
+  m_Layer: 0
+  m_Name: GameStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3135645059178986305
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692221168130469982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.14041, y: 1.25121, z: -0.08213}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2776755906198730375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692221168130469982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b859eaadfcfbc0f45bc2e5fab5ae5cc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
+  playerPrefeb: {fileID: 6528993715996682080, guid: c90a6d70d395fb94fbdb979bc374efc0, type: 3}
+  spawnPos: {fileID: 2888443277745290180, guid: 95a864ec655afad4e9f4857df1e223bc, type: 3}
+  delayPanel: {fileID: 0}
+  delayCount: {fileID: 0}
+  wavePanel: {fileID: 0}
+  waveCount: {fileID: 0}
+  skillCoolDownPanel: {fileID: 0}
+  skillCoolDown: {fileID: 0}
+  speedDownPanel: {fileID: 0}
+  speedDownCountText: {fileID: 0}
+  speedDown: {fileID: 0}
+  speedUpPanel: {fileID: 0}
+  speedUpCountText: {fileID: 0}
+  speedUp: {fileID: 0}
+  settingPanel: {fileID: 0}
+  musicSlider: {fileID: 0}
+  pausePanel: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  winPanel: {fileID: 0}
+  speedDownCounts: 0
+  speedDownTime: 0
+  isSpeedDownCooldown: 0
+  speedUpCounts: 0
+  speedUpTime: 0
+  isSpeedUpCooldown: 0
+  playerSpawnTime: 5
+  skillCoolDownCount: 0
+  wave: 0
+  delay: 0
+  isPlayerDead: 0
+  isGamePause: 0
+  isSettingOpen: 0
+  isGameOver: 0
+  isWin: 0
+  isWaveStart: 0
+  isSkillCooldown: 0
+  userInterfaces:
+  - {fileID: 0}
