@@ -8,12 +8,4 @@ public class MainMenuManager : MonoBehaviour
     {
         SceneManager.LoadScene(gameIndex);
     }
-    public void Exit()
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.ExitPlaymode();
-        #else
-            Application.Quit();
-        #endif
-    }
 }
