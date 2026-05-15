@@ -44,6 +44,8 @@ public abstract class BuildingClass : MonoBehaviour
         {
             HealthBar.SetActive(false);
         }
+
+        healthBarImage.fillAmount = currentHealth / MaxHealth;
     }
 
     public void Init(int goldRequire, int foodRequire, int produceAmount, bool isBuilt, float maxHealth)
@@ -102,10 +104,8 @@ public abstract class BuildingClass : MonoBehaviour
         
         if (collision.gameObject.TryGetComponent (out EnemyController enemyController))
         {
-            
-
             TakeDamage(enemyController.damage);
-            healthBarImage.fillAmount = currentHealth / MaxHealth;
+
             enemyController.isHasHit = true;
             var dir = (gameObject.transform.position - enemyController.transform.position).normalized;
             enemyController.OnEnemyHit(0, dir, gameObject.transform ,0.5f);
