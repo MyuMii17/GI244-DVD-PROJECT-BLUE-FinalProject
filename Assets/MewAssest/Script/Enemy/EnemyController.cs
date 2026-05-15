@@ -140,6 +140,7 @@ public class EnemyController : MonoBehaviour
 
         if(currentDamageRecived >= maxHealth)
         {
+            RandomItem();
             spawnManager.enemiesDead++;
             Destroy(gameObject);
         }
@@ -149,7 +150,18 @@ public class EnemyController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         isHasHit = false;
     }
-
+    void RandomItem()
+    {
+        float weight = Random.Range(1,100);
+        if(weight > 70)
+        {
+            PlayerController.GetStatic().enemySpeedDownCount++;
+        }
+        else if(weight > 40)
+        {
+            PlayerController.GetStatic().playerSpeedUpCount++;
+        }
+    }
     public void FindCloset()
     {
         if(ObjectManager.objects.Count == 0) return;

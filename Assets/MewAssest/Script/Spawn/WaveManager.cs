@@ -57,11 +57,12 @@ public class WaveManager : MonoBehaviour
 
             if (currentWave >= waves.Count)
             {
+                gameStateManager.isWin = true;
                 yield break;
             }
 
             yield return null;
-            
+
             gameStateManager.isWaveStart = false;
             currentDelay = waves[currentWave].DelayStart;
             gameStateManager.delay = currentDelay;

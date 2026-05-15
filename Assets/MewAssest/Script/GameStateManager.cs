@@ -16,10 +16,23 @@ public class GameStateManager : MonoBehaviour
     public TMP_Text waveCount;
     public GameObject skillCoolDownPanel;
     public TMP_Text skillCoolDown;
+    public GameObject speedDownPanel;
+    public TMP_Text speedDownCountText;
+    public TMP_Text speedDown;
+    public GameObject speedUpPanel;
+    public TMP_Text speedUpCountText;
+    public TMP_Text speedUp;
     public GameObject settingPanel;
     public Slider musicSlider;
     public GameObject pausePanel;
     public GameObject gameOverPanel;
+    public GameObject winPanel;
+    public float speedDownCounts;
+    public float speedDownTime;
+    public bool isSpeedDownCooldown;
+     public float speedUpCounts;
+    public float speedUpTime;
+    public bool isSpeedUpCooldown;
     public float playerSpawnTime = 5f;
     public float skillCoolDownCount;
     public float wave;
@@ -30,6 +43,7 @@ public class GameStateManager : MonoBehaviour
     private float nextSpawnTime;
     private bool isSpawnTimeSet;
     public bool isGameOver;
+    public bool isWin;
     public bool isWaveStart;
     public bool isSkillCooldown;
 
@@ -134,9 +148,48 @@ public class GameStateManager : MonoBehaviour
 
         if (isGameOver)
         {
-            gameOverPanel.SetActive(true);
             Pause();
+            gameOverPanel.SetActive(true);
         }
+
+        if (isWin)
+        {
+            Pause();
+            winPanel.SetActive(true);
+        }
+
+        if (isSpeedDownCooldown && speedDownTime >= 0)
+        {
+            speedDownPanel.SetActive(true);
+            speedDownTime -= Time.deltaTime;
+
+            int speedDownInt = (int)speedDownTime;
+
+            speedDown.text = $"{speedDownInt} SpeedDown";
+        }
+        else
+        {
+            isSpeedDownCooldown = false;
+            speedDownPanel.SetActive(false);
+        }
+
+        if (isSpeedUpCooldown && speedUpTime >= 0)
+        {
+            speedUpPanel.SetActive(true);
+            speedUpTime -= Time.deltaTime;
+
+            int speedUpInt = (int)speedUpTime;
+
+            speedUp.text = $"{speedUpInt} SpeedUp";
+        }
+        else
+        {
+            isSpeedUpCooldown = false;
+            speedUpPanel.SetActive(false);
+        }
+
+        speedDownCountText.text = speedDownCounts.ToString();
+        speedUpCountText.text = speedUpCounts.ToString();
     }
 
     IEnumerator WaveStart()

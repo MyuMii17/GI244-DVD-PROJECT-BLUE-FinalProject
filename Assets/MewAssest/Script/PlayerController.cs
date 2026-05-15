@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Basic Character Setting")]
+    
+    public int playerSpeedUpCount;
+    public int enemySpeedDownCount;
     public float maxHealth;
     public float currentHealth;
     public float acceleration = 10f;
@@ -36,6 +40,7 @@ public class PlayerController : MonoBehaviour
     public bool isPlayerCharging;
     public float pushForce;
     // Hidden Setting
+    private float speedBoost;
     private float nextHealTime;
     private bool isHealSetTime;
     private float moveForce;
@@ -55,7 +60,8 @@ public class PlayerController : MonoBehaviour
     private Collider2D cd;
     private DefenceManager defenceManager;
     private static PlayerController staticInstance;
-    private Coroutine OnChargingCoroutine;
+    private Coroutine onEnemySpeedDown;
+    private Coroutine onPlayerSpeedUp;
     private Coroutine onPlayerDamageCoroutine;
     public static PlayerController GetStatic()
     {
@@ -76,6 +82,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         nextHealTime = 0;
+        playerSpeedUpCount = 0;
+        enemySpeedDownCount = 0;
+        speedBoost = 1;
 
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         defenceManager = DefenceManager.GetStatic();
@@ -150,7 +159,25 @@ public class PlayerController : MonoBehaviour
             CharacterShoot();
         }
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame && currentRicochetCooldown <= 0 && isHasHit == false && isPlayerCharging == false)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame && enemySpeedDownCount > 0)
+        {
+            if (onEnemySpeedDown != null) return;
+            enemySpeedDownCount--;
+            gameStateManager.speedDownTime = 10;
+            onEnemySpeedDown = StartCoroutine(EnemySpeedDown());
+        }
+        gameStateManager.speedDownCounts = enemySpeedDownCount;
+
+        if (Keyboard.current.digit2Key.wasPressedThisFrame && playerSpeedUpCount > 0)
+        {
+            if (onPlayerSpeedUp != null) return;
+            playerSpeedUpCount--;
+            gameStateManager.speedUpTime = 10;
+            onPlayerSpeedUp = StartCoroutine(playerSpeedUp());
+        }
+        gameStateManager.speedUpCounts = playerSpeedUpCount;
+
+        if (Keyboard.current.cKey.wasPressedThisFrame && currentRicochetCooldown <= 0 && isHasHit == false && isPlayerCharging == false)
         {
             RicochetSkill();
         }
@@ -272,6 +299,48 @@ public class PlayerController : MonoBehaviour
         onPlayerDamageCoroutine = StartCoroutine(PlayeraTakeDamage(damage,dir,push));
     }
 
+    IEnumerator EnemySpeedDown()
+    {
+        gameStateManager.isSpeedDownCooldown = true;
+
+        foreach(var enemy in EnemyManager.enemies)
+        {
+            if(enemy.gameObject.TryGetComponent(out EnemyController enemyController))
+            {
+                enemyController.acceleration *= 0.5f;
+            }
+        }
+
+        yield return new WaitForSeconds(2.5f);
+
+
+        foreach(var enemy in EnemyManager.enemies)
+        {
+            if(enemy.gameObject.TryGetComponent(out EnemyController enemyController))
+            {
+                enemyController.acceleration += enemyController.acceleration;
+            }
+        }
+        yield return new WaitForSeconds(7.5f);
+
+        onEnemySpeedDown = null;
+    }
+
+    IEnumerator playerSpeedUp()
+    {
+        gameStateManager.isSpeedUpCooldown = true;
+
+        speedBoost += 0.5f;
+
+        yield return new WaitForSeconds(2.5f);
+
+        speedBoost -= 0.5f;
+
+        yield return new WaitForSeconds(7.5f);
+
+        onPlayerSpeedUp = null;
+    }
+
     IEnumerator PlayeraTakeDamage(float damage , Vector2 dir, float push)
     {
 
@@ -331,7 +400,7 @@ public class PlayerController : MonoBehaviour
     private void CharacterMove()
     {
         var v = moveAction.ReadValue<Vector2>();
-        rb.AddForce(v * moveForce, ForceMode2D.Force);
+        rb.AddForce(v * moveForce * speedBoost, ForceMode2D.Force);
     }
     private void CharacterRotation()
     {

@@ -6,6 +6,7 @@ public class PlayerUIController : MonoBehaviour
     private GameStateManager gameStateManager;
     private InputAction pauseAction;
     private bool isPause;
+    public bool isPauseOpen;
     void Start()
     {
         isPause = false;
@@ -19,13 +20,17 @@ public class PlayerUIController : MonoBehaviour
             isPause = !isPause;
         }
 
-        if(isPause == true)
+        if(isPause == true && !gameStateManager.isSettingOpen && gameStateManager.isGameOver != true && gameStateManager.isWin != true)
         {
+            if(isPauseOpen) return;
+            isPauseOpen = true;
             gameStateManager.Pause();
             gameStateManager.pausePanel.SetActive(true);
         }
-        else
+        else if(isPause == false && !gameStateManager.isSettingOpen && gameStateManager.isGameOver != true && gameStateManager.isWin != true)
         {
+            if(!isPauseOpen) return;
+            isPauseOpen = false;
             gameStateManager.Resume();
         }
     }
