@@ -7,6 +7,7 @@ public class SpawnManager : MonoBehaviour
 {
     private Wave wave;
     private static SpawnManager StaticInstance = null;
+    private GameStateManager gameStateManager;
     public List<Transform> spawnPoint = new List<Transform>();
     public GameObject normalEnemies;
     public GameObject rangeEnemies;
@@ -19,7 +20,6 @@ public class SpawnManager : MonoBehaviour
     public int totalEnemies;
     public int enemiesDead;
     public float nextSpawnTime;
-    public int waveCount = 0;
     private Coroutine spawnCoroutine;
     public bool isCanSpawn;
     public static SpawnManager GetStatic()
@@ -37,9 +37,14 @@ public class SpawnManager : MonoBehaviour
         StaticInstance = this;
 
     }
+    void Start()
+    {
+        gameStateManager = GameStateManager.GetStatic();
+    }
     public void ChangeWave(Wave wave)
     {
         this.wave = wave;
+
         canSpawnEnemies = true;
 
         isStart = true;
@@ -68,7 +73,6 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                waveCount++;
                 canSpawnEnemies = false;
             }
         }
@@ -100,7 +104,7 @@ public class SpawnManager : MonoBehaviour
                 );
                 totalEnemies++;
                 normalEnemy++;
-                
+
                 yield return new WaitForSeconds(wave.spawnInterval);
 
             }

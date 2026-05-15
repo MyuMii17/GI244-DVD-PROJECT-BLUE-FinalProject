@@ -1,17 +1,22 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Basic Character Setting")]
+    
+    public int playerSpeedUpCount;
+    public int enemySpeedDownCount;
     public float maxHealth;
     public float currentHealth;
     public float acceleration = 10f;
     public float mass = 1f;
     public float linearDamp = 5f;
     public float shootCooldown = 1f;
+    public float chargeCooldown = 1f;
     public float clashDamage = 0;
     public float skillRicochetCooldown = 5f;
     public float skillChargingCooldown = 6f;
@@ -36,13 +41,17 @@ public class PlayerController : MonoBehaviour
     public bool isPlayerCharging;
     public float pushForce;
     // Hidden Setting
+    private float speedBoost;
     private float nextHealTime;
     private bool isHealSetTime;
     private float moveForce;
     private float nextShoot;
+    private float nextCharge;
     private float currentRicochetCooldown;
     private float time;
+    private Vector3 chargeScal;
     [SerializeField] private GameObject shootCharge;
+    private GameStateManager gameStateManager;
     private CameraController cameraController;
     private InputAction moveAction;
     private InputAction lookAction;
@@ -54,7 +63,8 @@ public class PlayerController : MonoBehaviour
     private Collider2D cd;
     private DefenceManager defenceManager;
     private static PlayerController staticInstance;
-    private Coroutine OnChargingCoroutine;
+    private Coroutine onEnemySpeedDown;
+    private Coroutine onPlayerSpeedUp;
     private Coroutine onPlayerDamageCoroutine;
     public static PlayerController GetStatic()
     {
@@ -75,6 +85,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         nextHealTime = 0;
+        playerSpeedUpCount = 0;
+        enemySpeedDownCount = 0;
+        speedBoost = 1;
 
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         defenceManager = DefenceManager.GetStatic();
@@ -82,6 +95,7 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
 
         cameraController = CameraController.GetStatic();
+        gameStateManager = GameStateManager.GetStatic();
 
         moveAction = InputSystem.actions.FindAction("Move");
         lookAction = InputSystem.actions.FindAction("look");
@@ -102,6 +116,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
+        if(gameStateManager.isGamePause) return;
+
         time = Time.time;
 
         if(isHasHit != true)
@@ -145,12 +162,30 @@ public class PlayerController : MonoBehaviour
             CharacterShoot();
         }
 
-        if (Keyboard.current.digit1Key.wasPressedThisFrame && currentRicochetCooldown <= 0 && isHasHit == false && isPlayerCharging == false)
+        if (Keyboard.current.digit1Key.wasPressedThisFrame && enemySpeedDownCount > 0)
+        {
+            if (onEnemySpeedDown != null) return;
+            enemySpeedDownCount--;
+            gameStateManager.speedDownTime = 10;
+            onEnemySpeedDown = StartCoroutine(EnemySpeedDown());
+        }
+        gameStateManager.speedDownCounts = enemySpeedDownCount;
+
+        if (Keyboard.current.digit2Key.wasPressedThisFrame && playerSpeedUpCount > 0)
+        {
+            if (onPlayerSpeedUp != null) return;
+            playerSpeedUpCount--;
+            gameStateManager.speedUpTime = 10;
+            onPlayerSpeedUp = StartCoroutine(playerSpeedUp());
+        }
+        gameStateManager.speedUpCounts = playerSpeedUpCount;
+
+        if (Keyboard.current.cKey.wasPressedThisFrame && currentRicochetCooldown <= 0 && isHasHit == false && isPlayerCharging == false)
         {
             RicochetSkill();
         }
 
-        if (ChargeAction.IsPressed() && isHasHit == false)
+        if (ChargeAction.IsPressed() && isHasHit == false && Time.time >= nextCharge)
         {
             isPlayerCharging = true;
             shootCharge.SetActive(true);
@@ -167,7 +202,10 @@ public class PlayerController : MonoBehaviour
                 currentChargeAccel = chargeAccelerator;
                 currentChargeDamage = chargeDamage;
                 isChargeSpawn = false;
-                Instantiate(arrowSecondSkillPrefeb,shootPos.position,shootPos.rotation);
+                var arrowShoot = Instantiate(arrowSecondSkillPrefeb,shootPos.position,shootPos.rotation);
+                arrowShoot.transform.localScale = chargeScal;
+                nextCharge = Time.time + chargeCooldown;
+                Destroy(arrowShoot,2f);
             }
             else if (isChargeSpawn == false)
             {
@@ -179,7 +217,11 @@ public class PlayerController : MonoBehaviour
         if(currentRicochetCooldown > 0)
         {
             currentRicochetCooldown -= Time.deltaTime;
-        }   
+        }
+        else
+        {
+            gameStateManager.isSkillCooldown = false;
+        }
 
         Vector2 mouseDirection = lookAction.ReadValue<Vector2>();
 
@@ -263,6 +305,48 @@ public class PlayerController : MonoBehaviour
         onPlayerDamageCoroutine = StartCoroutine(PlayeraTakeDamage(damage,dir,push));
     }
 
+    IEnumerator EnemySpeedDown()
+    {
+        gameStateManager.isSpeedDownCooldown = true;
+
+        foreach(var enemy in EnemyManager.enemies)
+        {
+            if(enemy.gameObject.TryGetComponent(out EnemyController enemyController))
+            {
+                enemyController.acceleration *= 0.5f;
+            }
+        }
+
+        yield return new WaitForSeconds(2.5f);
+
+
+        foreach(var enemy in EnemyManager.enemies)
+        {
+            if(enemy.gameObject.TryGetComponent(out EnemyController enemyController))
+            {
+                enemyController.acceleration += enemyController.acceleration;
+            }
+        }
+        yield return new WaitForSeconds(7.5f);
+
+        onEnemySpeedDown = null;
+    }
+
+    IEnumerator playerSpeedUp()
+    {
+        gameStateManager.isSpeedUpCooldown = true;
+
+        speedBoost += 0.5f;
+
+        yield return new WaitForSeconds(2.5f);
+
+        speedBoost -= 0.5f;
+
+        yield return new WaitForSeconds(7.5f);
+
+        onPlayerSpeedUp = null;
+    }
+
     IEnumerator PlayeraTakeDamage(float damage , Vector2 dir, float push)
     {
 
@@ -291,10 +375,11 @@ public class PlayerController : MonoBehaviour
         isCanCharge = false;
 
         scale += new Vector3(0.8f * Time.deltaTime, 0.8f * Time.deltaTime, 0); 
-        scale.x = Mathf.Clamp(scale.x, 0.1f,1.5f);
-        scale.y = Mathf.Clamp(scale.y, 0.1f,1.5f);
+        scale.x = Mathf.Clamp(scale.x, 0.5f,1.5f);
+        scale.y = Mathf.Clamp(scale.y, 0.5f,1.5f);
 
         shootCharge.transform.localScale = scale;
+        chargeScal = scale * 0.25f;
 
         float accel = chargeAccelerator;
         accel += 8f * Time.deltaTime;
@@ -322,7 +407,7 @@ public class PlayerController : MonoBehaviour
     private void CharacterMove()
     {
         var v = moveAction.ReadValue<Vector2>();
-        rb.AddForce(v * moveForce, ForceMode2D.Force);
+        rb.AddForce(v * moveForce * speedBoost, ForceMode2D.Force);
     }
     private void CharacterRotation()
     {
@@ -354,6 +439,8 @@ public class PlayerController : MonoBehaviour
             shootPos.rotation
         );
         currentRicochetCooldown = skillRicochetCooldown;
+        gameStateManager.skillCoolDownCount = skillRicochetCooldown;
+        gameStateManager.isSkillCooldown = true;
     }
 
     void OnCollisionEnter2D(Collision2D collision)

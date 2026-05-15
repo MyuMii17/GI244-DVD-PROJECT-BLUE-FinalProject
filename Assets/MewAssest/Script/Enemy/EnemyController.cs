@@ -2,7 +2,6 @@ using System.Collections;
 using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.Build;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -12,6 +11,7 @@ public class EnemyController : MonoBehaviour
     private Transform target;
     private LayerMask objectLayer;
     private LayerMask constructionLayer;
+    private GameStateManager gameStateManager;
     private float rangeDistance;
     public Transform shootPosition;
     public Transform shootRoataion;
@@ -42,6 +42,8 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         spawnManager = SpawnManager.GetStatic();
+        gameStateManager = GameStateManager.GetStatic();
+
         rb = GetComponent<Rigidbody2D>();
         cd = GetComponent<Collider2D>();
         objectLayer = LayerMask.GetMask("Object");
@@ -64,6 +66,7 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
+        if(gameStateManager.isGamePause) return;
         if(isHasHit == false  && isClash == false)
         {
             isMoving = true;
@@ -137,6 +140,7 @@ public class EnemyController : MonoBehaviour
 
         if(currentDamageRecived >= maxHealth)
         {
+            RandomItem();
             spawnManager.enemiesDead++;
             Destroy(gameObject);
         }
@@ -146,7 +150,18 @@ public class EnemyController : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         isHasHit = false;
     }
-
+    void RandomItem()
+    {
+        float weight = Random.Range(1,100);
+        if(weight > 70)
+        {
+            PlayerController.GetStatic().enemySpeedDownCount++;
+        }
+        else if(weight > 40)
+        {
+            PlayerController.GetStatic().playerSpeedUpCount++;
+        }
+    }
     public void FindCloset()
     {
         if(ObjectManager.objects.Count == 0) return;

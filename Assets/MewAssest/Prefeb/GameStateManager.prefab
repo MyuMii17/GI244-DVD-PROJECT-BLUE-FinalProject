@@ -45,8 +45,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
   playerPrefeb: {fileID: 6528993715996682080, guid: c90a6d70d395fb94fbdb979bc374efc0, type: 3}
-  spawnPos: {fileID: 0}
+  spawnPos: {fileID: 2888443277745290180, guid: 95a864ec655afad4e9f4857df1e223bc, type: 3}
+  delayPanel: {fileID: 0}
+  delayCount: {fileID: 0}
+  wavePanel: {fileID: 0}
+  waveCount: {fileID: 0}
+  skillCoolDownPanel: {fileID: 0}
+  skillCoolDown: {fileID: 0}
+  speedDownPanel: {fileID: 0}
+  speedDownCountText: {fileID: 0}
+  speedDown: {fileID: 0}
+  speedUpPanel: {fileID: 0}
+  speedUpCountText: {fileID: 0}
+  speedUp: {fileID: 0}
+  settingPanel: {fileID: 0}
+  musicSlider: {fileID: 0}
+  pausePanel: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  winPanel: {fileID: 0}
+  speedDownCounts: 0
+  speedDownTime: 0
+  isSpeedDownCooldown: 0
+  speedUpCounts: 0
+  speedUpTime: 0
+  isSpeedUpCooldown: 0
   playerSpawnTime: 5
+  skillCoolDownCount: 0
+  wave: 0
+  delay: 0
   isPlayerDead: 0
+  isGamePause: 0
+  isSettingOpen: 0
   isGameOver: 0
-  userInterfaces: []
+  isWin: 0
+  isWaveStart: 0
+  isSkillCooldown: 0
+  userInterfaces:
+  - {fileID: 0}
