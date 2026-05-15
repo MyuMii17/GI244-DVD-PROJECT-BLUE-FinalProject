@@ -375,8 +375,8 @@ public class PlayerController : MonoBehaviour
         isCanCharge = false;
 
         scale += new Vector3(0.8f * Time.deltaTime, 0.8f * Time.deltaTime, 0); 
-        scale.x = Mathf.Clamp(scale.x, 0.1f,1.5f);
-        scale.y = Mathf.Clamp(scale.y, 0.1f,1.5f);
+        scale.x = Mathf.Clamp(scale.x, 0.5f,1.5f);
+        scale.y = Mathf.Clamp(scale.y, 0.5f,1.5f);
 
         shootCharge.transform.localScale = scale;
         chargeScal = scale * 0.25f;
