@@ -58,6 +58,7 @@ public class GameStateManager : MonoBehaviour
 
     void Awake()
     {
+        Time.timeScale = 1;
         if(StaticInstance != null)
         {
             Destroy(this);
