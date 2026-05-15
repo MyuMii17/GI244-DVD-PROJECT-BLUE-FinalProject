@@ -200,12 +200,4 @@ public class GameStateManager : MonoBehaviour
         Resume();
         SceneManager.LoadScene(mainMenuIndex);
     }
-    public void Play()
-    {
-        SceneManager.LoadScene(gameIndex);
-    }
-    public void Exit()
-    {
-        UnityEditor.EditorApplication.ExitPlaymode();
-    }
 }
