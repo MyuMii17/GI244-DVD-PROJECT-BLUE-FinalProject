@@ -1146,6 +1146,7 @@ GameObject:
   - component: {fileID: 121840526}
   - component: {fileID: 121840529}
   - component: {fileID: 121840530}
+  - component: {fileID: 121840532}
   - component: {fileID: 121840531}
   m_Layer: 7
   m_Name: Castle
@@ -1319,6 +1320,18 @@ PolygonCollider2D:
       - {x: 2.90625, y: 0.6875}
       - {x: 2.53125, y: 1.5}
   m_UseDelaunayMesh: 1
+--- !u!114 &121840532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121840525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec1f03b08e9ed5043a64bc7a6628478f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::castleAdd
 --- !u!114 &159642529 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4379807791442846757, guid: 18a13fb7f50815643a9c6700834e9fbe, type: 3}
