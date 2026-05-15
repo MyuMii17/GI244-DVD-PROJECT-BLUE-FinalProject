@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text CitizenText;
     private bool isFixSetTime;
     private float nextFixTime;
+
     private void Awake()
     {
         repair = InputSystem.actions.FindAction("Interact");
@@ -37,6 +38,20 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector2 screenPos = Mouse.current.position.ReadValue();
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+            Debug.DrawRay(ray.origin, ray.direction * 5, Color.red, 5f);
+
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+
+            if (hit.collider != null && hit.collider.TryGetComponent(out Barrack barrack))
+            {
+                barrack.ShowUnitBuyUi();
+            }
+        }
+
         if (inputAction.triggered)
         {
             Debug.Log("House: " + buildingList[0].IsBuilt  + "Gold: " + Resource.GetInstance().Gold + "Citizen: " + Resource.GetInstance().Citizen);
@@ -119,27 +134,43 @@ public class GameManager : MonoBehaviour
 
     public void HouseBuildButton()
     {
-        buildingList[0].Build();
+        if (GameStateManager.GetStatic().isWaveStart != false)
+        {
+            buildingList[0].Build();
+        }
+        
     }
 
     public void BarrackBuildButton()
     {
-        buildingList[1].Build();
+        if (GameStateManager.GetStatic().isWaveStart == false)
+        {
+            buildingList[1].Build();
+        }
     }
 
     public void FarmBuildButton()
     {
-        buildingList[2].Build();
+        if (GameStateManager.GetStatic().isWaveStart == false)
+        {
+            buildingList[2].Build();
+        }
     }
 
     public void MineBuildButton()
     {
-        buildingList[3].Build();
+        if (GameStateManager.GetStatic().isWaveStart == false)
+        {
+            buildingList[3].Build();
+        }
     }
 
     public void ApothecaryBuildButton()
     {
-        buildingList[4].Build();
+        if (GameStateManager.GetStatic().isWaveStart == false)
+        {
+            buildingList[4].Build();
+        }
     }
     
 }

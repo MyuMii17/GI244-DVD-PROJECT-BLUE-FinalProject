@@ -19,6 +19,12 @@ public class Barrack : BuildingClass, IPointerClickHandler
     {
         
         Debug.Log("Clicked");
+    }
+
+    public void ShowUnitBuyUi()
+    {
+        Debug.Log("Clicked");
+
         if (unitBuyUi.activeSelf)
         {
             unitBuyUi.SetActive(false);
@@ -26,9 +32,9 @@ public class Barrack : BuildingClass, IPointerClickHandler
         else
         {
             unitBuyUi.SetActive(true);
-        }  
-        
+        }
     }
+
 
     public void TrainInfantry()
     {
@@ -43,6 +49,22 @@ public class Barrack : BuildingClass, IPointerClickHandler
             Resource.GetInstance().Gold -= 10;
             Resource.GetInstance().Food -= 10;
             friend.transform.position = rallyPos.position;
+        }
+    }
+
+    public void TrainArcher()
+    {
+        if (Resource.GetInstance().Citizen >= 6 && Resource.GetInstance().Gold >= 20 && Resource.GetInstance().Food >= 20)
+        {
+
+            var rangeFriend = FriendliesPool.GetInstance().GetFriend();
+            var rangeFriendlyController = rangeFriend.GetComponent<FriendlyController>();
+            rangeFriendlyController.isHasHit = false;
+            Resource.GetInstance().MaxCitizen -= 6;
+            Resource.GetInstance().Citizen -= 6;
+            Resource.GetInstance().Gold -= 20;
+            Resource.GetInstance().Food -= 20;
+            rangeFriend.transform.position = rallyPos.position;
         }
     }
 

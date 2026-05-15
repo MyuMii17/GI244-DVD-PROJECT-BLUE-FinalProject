@@ -186,13 +186,19 @@ public class FriendlyController : MonoBehaviour
             rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
         }
 
-        if(currentDamageRecived >= maxHealth)
+        if(currentDamageRecived >= maxHealth && !isLongRange)
         {
             
             currentHealth = maxHealth;
             currentDamageRecived = 0;
-            // FriendliesPool.GetInstance().ReturnFriend(this.gameObject);
-            Destroy(gameObject);
+            FriendliesPool.GetInstance().ReturnFriend(this.gameObject);
+            //Destroy(gameObject);
+        }
+        else if(currentDamageRecived >= maxHealth && isLongRange)
+        {
+            currentHealth = maxHealth;
+            currentDamageRecived = 0;
+            FriendliesPool.GetInstance().ReturnRangeFriend(this.gameObject);
         }
 
         yield return new WaitForSeconds(1);

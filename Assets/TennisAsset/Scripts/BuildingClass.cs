@@ -60,6 +60,7 @@ public abstract class BuildingClass : MonoBehaviour
 
     public void Build()
     {
+
         currentHealth = MaxHealth;
         if (this.IsBuilt) return;
         if (Resource.GetInstance().Gold < GoldRequire || Resource.GetInstance().Food < FoodRequire) return;

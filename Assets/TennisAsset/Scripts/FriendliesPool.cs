@@ -6,10 +6,11 @@ using UnityEngine;
 public class FriendliesPool : MonoBehaviour
 {
     [SerializeField] private GameObject friendlyPrefab;
+    [SerializeField] private GameObject rangeFriendlyPrefab;
     [SerializeField] private int poolSize = 10;
 
     private readonly List<GameObject> friendlyPool = new();
-
+    private readonly List<GameObject> rangeFriendlyPool = new();
     public static FriendliesPool friendInstance = null;
 
     public static FriendliesPool GetInstance()
@@ -50,6 +51,26 @@ public class FriendliesPool : MonoBehaviour
         friendlyPool.Add(newFriend);
     }
 
+
+    private void CreateNewRangeFriend()
+    {
+        var newRangeFriend = Instantiate(rangeFriendlyPrefab);
+        newRangeFriend.SetActive(false);
+        rangeFriendlyPool.Add(newRangeFriend);
+    }
+
+    public GameObject GetRangeFriend()
+    {
+        if (rangeFriendlyPool.Count == 0 && rangeFriendlyPool.Count !> poolSize)
+        {
+            CreateNewRangeFriend();
+        }
+        var rangeFriend = rangeFriendlyPool[0];
+        rangeFriendlyPool.RemoveAt(0);
+        rangeFriend.SetActive(true);
+        return rangeFriend;
+    }
+
     public GameObject GetFriend()
     {
        if (friendlyPool.Count == 0 && friendlyPool.Count !> poolSize)
@@ -59,9 +80,12 @@ public class FriendliesPool : MonoBehaviour
 
         var friend = friendlyPool[0];
         friendlyPool.RemoveAt(0);
+
         friend.SetActive(true);
         return friend;
     }
+
+    
 
     public void ReturnFriend(GameObject friend)
     {
@@ -70,5 +94,13 @@ public class FriendliesPool : MonoBehaviour
         friendlyPool.Add(friend);
         friend.SetActive(false);
         
+    }
+
+    public void ReturnRangeFriend(GameObject rangeFriend)
+    {
+        Resource.GetInstance().MaxCitizen += 6;
+        
+        rangeFriendlyPool.Add(rangeFriend);
+        rangeFriend.SetActive(false);
     }
 }
