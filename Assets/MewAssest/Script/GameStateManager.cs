@@ -114,7 +114,7 @@ public class GameStateManager : MonoBehaviour
             isSpawnTimeSet = false;
         }
 
-        if(ObjectManager.objects.Count == 0)
+        if(ObjectManager.castle.Count == 0)
         {
             isGameOver = true;
         }

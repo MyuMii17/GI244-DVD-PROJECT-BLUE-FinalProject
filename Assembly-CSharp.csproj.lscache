@@ -75,6 +75,7 @@ Assets/MewAssest/Script/
  GameStateManager.cs
  MainMenuManager.cs
  Object/
+  castleAdd.cs
   ObjectAdd.cs
   ObjectController.cs
   ObjectManager.cs
