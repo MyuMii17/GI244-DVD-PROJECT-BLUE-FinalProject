@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
         nextShoot = 0;
         currentRicochetCooldown = 0;
 
-        cameraController.playerTransform = gameObject.transform;
+        //cameraController.playerTransform = gameObject.transform;
     }
 
     void Update()
@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
 
         time = Time.time;
 
-        if(isHasHit != true)
+        if(isHasHit != true && ObjectManager.apothecary.Count > 0)
         {
             if(isHealSetTime == false)
             {
@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
                 isHealSetTime = true;
             }
 
-            if(time >= nextHealTime && currentDamageRecive > 0)
+            if(time >= nextHealTime && currentDamageRecive > 0 )
             {
                 currentDamageRecive -= heal;
                 if(currentHealth < maxHealth)
@@ -313,7 +313,9 @@ public class PlayerController : MonoBehaviour
         {
             if(enemy.gameObject.TryGetComponent(out EnemyController enemyController))
             {
-                enemyController.acceleration *= 0.5f;
+                enemyController.acceleration -= 0.8f;
+                enemyController.currentHealth -= 5f;
+                enemyController.currentDamageRecived += 5f;
             }
         }
 
@@ -324,7 +326,8 @@ public class PlayerController : MonoBehaviour
         {
             if(enemy.gameObject.TryGetComponent(out EnemyController enemyController))
             {
-                enemyController.acceleration += enemyController.acceleration;
+                enemyController.acceleration += 0.8f;
+               
             }
         }
         yield return new WaitForSeconds(7.5f);
@@ -336,11 +339,13 @@ public class PlayerController : MonoBehaviour
     {
         gameStateManager.isSpeedUpCooldown = true;
 
-        speedBoost += 0.5f;
+        speedBoost += 0.8f;
+        arrowPrefeb.GetComponent<Arrow>().arrowDamage += 5f;
 
         yield return new WaitForSeconds(2.5f);
 
-        speedBoost -= 0.5f;
+        speedBoost -= 0.8f;
+        arrowPrefeb.GetComponent<Arrow>().arrowDamage -= 5f;
 
         yield return new WaitForSeconds(7.5f);
 
@@ -352,7 +357,7 @@ public class PlayerController : MonoBehaviour
 
         currentDamageRecive += damage;
         currentHealth -= damage;
-        cd.enabled = false;
+        
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(-dir * push * 2,ForceMode2D.Impulse);
 
@@ -364,7 +369,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         rb.linearVelocity = Vector2.zero;
-        cd.enabled = true;
+      
         isHasHit = false; 
     }
 
@@ -379,7 +384,7 @@ public class PlayerController : MonoBehaviour
         scale.y = Mathf.Clamp(scale.y, 0.5f,1.5f);
 
         shootCharge.transform.localScale = scale;
-        chargeScal = scale * 0.25f;
+        chargeScal = scale * 0.5f;
 
         float accel = chargeAccelerator;
         accel += 8f * Time.deltaTime;

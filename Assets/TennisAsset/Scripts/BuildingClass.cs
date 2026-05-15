@@ -60,10 +60,10 @@ public abstract class BuildingClass : MonoBehaviour
 
     public void Build()
     {
-
         currentHealth = MaxHealth;
         if (this.IsBuilt) return;
         if (Resource.GetInstance().Gold < GoldRequire || Resource.GetInstance().Food < FoodRequire) return;
+        if (GameStateManager.GetStatic().isWaveStart == true) return;
         Resource.GetInstance().Gold -= GoldRequire;
         Resource.GetInstance().Food -= FoodRequire;
         gameObject.SetActive(true);
@@ -80,7 +80,7 @@ public abstract class BuildingClass : MonoBehaviour
 
     public void Repair()
     {
-        
+        if (GameStateManager.GetStatic().isWaveStart == true) return;
         currentHealth += 50;
         Debug.Log("Repairing... Current Health: " + currentHealth);
 

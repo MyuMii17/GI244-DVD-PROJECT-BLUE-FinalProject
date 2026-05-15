@@ -40,7 +40,15 @@ public class FriendliesPool : MonoBehaviour
             {
                 yield return null;
             }
+
+            CreateNewRangeFriend();
+            if (i % 5 == 0)
+            {
+                yield return null;
+            }
         }
+
+
     }
 
 
@@ -67,6 +75,7 @@ public class FriendliesPool : MonoBehaviour
         }
         var rangeFriend = rangeFriendlyPool[0];
         rangeFriendlyPool.RemoveAt(0);
+
         rangeFriend.SetActive(true);
         return rangeFriend;
     }
@@ -98,7 +107,7 @@ public class FriendliesPool : MonoBehaviour
 
     public void ReturnRangeFriend(GameObject rangeFriend)
     {
-        Resource.GetInstance().MaxCitizen += 6;
+        Resource.GetInstance().MaxCitizen += 10;
         
         rangeFriendlyPool.Add(rangeFriend);
         rangeFriend.SetActive(false);

@@ -637,7 +637,7 @@ MonoBehaviour:
   heal: 5
   isHasHit: 0
   isClash: 0
-  circleRange: 5
+  circleRange: 8
   isFind: 0
   isDef: 0
   isHere: 0

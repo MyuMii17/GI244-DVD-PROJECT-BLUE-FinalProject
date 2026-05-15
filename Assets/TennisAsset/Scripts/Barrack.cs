@@ -54,14 +54,14 @@ public class Barrack : BuildingClass, IPointerClickHandler
 
     public void TrainArcher()
     {
-        if (Resource.GetInstance().Citizen >= 6 && Resource.GetInstance().Gold >= 20 && Resource.GetInstance().Food >= 20)
+        if (Resource.GetInstance().Citizen >= 10 && Resource.GetInstance().Gold >= 20 && Resource.GetInstance().Food >= 20)
         {
 
-            var rangeFriend = FriendliesPool.GetInstance().GetFriend();
+            var rangeFriend = FriendliesPool.GetInstance().GetRangeFriend();
             var rangeFriendlyController = rangeFriend.GetComponent<FriendlyController>();
             rangeFriendlyController.isHasHit = false;
-            Resource.GetInstance().MaxCitizen -= 6;
-            Resource.GetInstance().Citizen -= 6;
+            Resource.GetInstance().MaxCitizen -= 10;
+            Resource.GetInstance().Citizen -= 10;
             Resource.GetInstance().Gold -= 20;
             Resource.GetInstance().Food -= 20;
             rangeFriend.transform.position = rallyPos.position;

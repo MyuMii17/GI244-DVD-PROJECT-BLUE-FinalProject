@@ -79,7 +79,7 @@ public class FriendlyController : MonoBehaviour
             isMoving = false;
         }
 
-        if(isHasHit != true)
+        if(isHasHit != true && ObjectManager.apothecary.Count > 0)
         {
             if(isHealSetTime == false)
             {
@@ -87,7 +87,7 @@ public class FriendlyController : MonoBehaviour
                 isHealSetTime = true;
             }
 
-            if(time >= nextHealTime && currentDamageRecived > 0)
+            if(time >= nextHealTime && currentDamageRecived > 0 )
             {
                 currentDamageRecived -= heal;
                 if(currentHealth < maxHealth)
@@ -125,7 +125,7 @@ public class FriendlyController : MonoBehaviour
         }
 
         
-        if (isLongRange == true && isFind && rangeDistance <= 5 && isHasHit == false)
+        if (isLongRange == true && isFind && rangeDistance <= 8 && isHasHit == false)
         {
             if (target != null)
             {
@@ -188,7 +188,7 @@ public class FriendlyController : MonoBehaviour
 
         if(currentDamageRecived >= maxHealth && !isLongRange)
         {
-            
+            isDef = false;
             currentHealth = maxHealth;
             currentDamageRecived = 0;
             FriendliesPool.GetInstance().ReturnFriend(this.gameObject);
@@ -196,6 +196,7 @@ public class FriendlyController : MonoBehaviour
         }
         else if(currentDamageRecived >= maxHealth && isLongRange)
         {
+            isDef = false;
             currentHealth = maxHealth;
             currentDamageRecived = 0;
             FriendliesPool.GetInstance().ReturnRangeFriend(this.gameObject);

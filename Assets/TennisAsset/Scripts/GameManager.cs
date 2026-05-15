@@ -52,12 +52,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (inputAction.triggered)
-        {
-            Debug.Log("House: " + buildingList[0].IsBuilt  + "Gold: " + Resource.GetInstance().Gold + "Citizen: " + Resource.GetInstance().Citizen);
-            Debug.Log("Produce: " + buildingList[0].ProduceAmount);
-            BuildingsOuput();
-        }
+        //if (inputAction.triggered)
+        //{
+        //    Debug.Log("House: " + buildingList[0].IsBuilt  + "Gold: " + Resource.GetInstance().Gold + "Citizen: " + Resource.GetInstance().Citizen);
+        //    Debug.Log("Produce: " + buildingList[0].ProduceAmount);
+        //    BuildingsOuput();
+        //}
         if (GoldText != null && FoodText != null)
         {
             GoldText.text = Resource.GetInstance().Gold.ToString();
@@ -134,43 +134,27 @@ public class GameManager : MonoBehaviour
 
     public void HouseBuildButton()
     {
-        if (GameStateManager.GetStatic().isWaveStart != false)
-        {
-            buildingList[0].Build();
-        }
-        
+        buildingList[0].Build();
     }
 
     public void BarrackBuildButton()
     {
-        if (GameStateManager.GetStatic().isWaveStart == false)
-        {
-            buildingList[1].Build();
-        }
+        buildingList[1].Build();
     }
 
     public void FarmBuildButton()
     {
-        if (GameStateManager.GetStatic().isWaveStart == false)
-        {
-            buildingList[2].Build();
-        }
+        buildingList[2].Build();
     }
 
     public void MineBuildButton()
     {
-        if (GameStateManager.GetStatic().isWaveStart == false)
-        {
-            buildingList[3].Build();
-        }
+        buildingList[3].Build();
     }
 
     public void ApothecaryBuildButton()
     {
-        if (GameStateManager.GetStatic().isWaveStart == false)
-        {
-            buildingList[4].Build();
-        }
+        buildingList[4].Build();
     }
     
 }
