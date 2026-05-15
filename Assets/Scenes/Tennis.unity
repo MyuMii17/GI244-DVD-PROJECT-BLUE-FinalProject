@@ -1145,8 +1145,8 @@ GameObject:
   - component: {fileID: 121840527}
   - component: {fileID: 121840526}
   - component: {fileID: 121840529}
-  - component: {fileID: 121840530}
   - component: {fileID: 121840532}
+  - component: {fileID: 121840530}
   - component: {fileID: 121840531}
   m_Layer: 7
   m_Name: Castle
@@ -11127,7 +11127,7 @@ GameObject:
   - component: {fileID: 418160304}
   - component: {fileID: 418160303}
   - component: {fileID: 418160302}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15830,7 +15830,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1424830489}
   - component: {fileID: 1424830488}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ObjectManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18193,6 +18193,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FriendlyManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3294798521747792146, guid: 2941361a259d5714f85618c702f8c8c9, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4587944102544859998, guid: 2941361a259d5714f85618c702f8c8c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.24111
@@ -18949,6 +18953,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerManager
       objectReference: {fileID: 0}
+    - target: {fileID: 22745759128329908, guid: 7986966376ea66f4697530d1344dcab2, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2706860872044057761, guid: 7986966376ea66f4697530d1344dcab2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.15902
@@ -19017,8 +19025,8 @@ SceneRoots:
   - {fileID: 289447011}
   - {fileID: 1992496087}
   - {fileID: 1787458425}
-  - {fileID: 504215857}
   - {fileID: 418160306}
+  - {fileID: 504215857}
   - {fileID: 1498037044}
   - {fileID: 1424830489}
   - {fileID: 2379904437876688659}
