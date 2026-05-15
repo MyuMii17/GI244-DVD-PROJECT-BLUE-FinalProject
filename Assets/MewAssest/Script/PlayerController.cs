@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public float mass = 1f;
     public float linearDamp = 5f;
     public float shootCooldown = 1f;
+    public float chargeCooldown = 1f;
     public float clashDamage = 0;
     public float skillRicochetCooldown = 5f;
     public float skillChargingCooldown = 6f;
@@ -45,8 +46,10 @@ public class PlayerController : MonoBehaviour
     private bool isHealSetTime;
     private float moveForce;
     private float nextShoot;
+    private float nextCharge;
     private float currentRicochetCooldown;
     private float time;
+    private Vector3 chargeScal;
     [SerializeField] private GameObject shootCharge;
     private GameStateManager gameStateManager;
     private CameraController cameraController;
@@ -182,7 +185,7 @@ public class PlayerController : MonoBehaviour
             RicochetSkill();
         }
 
-        if (ChargeAction.IsPressed() && isHasHit == false)
+        if (ChargeAction.IsPressed() && isHasHit == false && Time.time >= nextCharge)
         {
             isPlayerCharging = true;
             shootCharge.SetActive(true);
@@ -199,7 +202,10 @@ public class PlayerController : MonoBehaviour
                 currentChargeAccel = chargeAccelerator;
                 currentChargeDamage = chargeDamage;
                 isChargeSpawn = false;
-                Instantiate(arrowSecondSkillPrefeb,shootPos.position,shootPos.rotation);
+                var arrowShoot = Instantiate(arrowSecondSkillPrefeb,shootPos.position,shootPos.rotation);
+                arrowShoot.transform.localScale = chargeScal;
+                nextCharge = Time.time + chargeCooldown;
+                Destroy(arrowShoot,2f);
             }
             else if (isChargeSpawn == false)
             {
@@ -373,6 +379,7 @@ public class PlayerController : MonoBehaviour
         scale.y = Mathf.Clamp(scale.y, 0.1f,1.5f);
 
         shootCharge.transform.localScale = scale;
+        chargeScal = scale * 0.25f;
 
         float accel = chargeAccelerator;
         accel += 8f * Time.deltaTime;
