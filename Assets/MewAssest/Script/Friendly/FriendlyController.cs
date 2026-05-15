@@ -8,6 +8,7 @@ public class FriendlyController : MonoBehaviour
     private bool isHealSetTime;
     private Rigidbody2D rb;
     private Transform target;
+    private GameStateManager gameStateManager;
     public GameObject defPos;
     private float rangeDistance;
     public Transform shootPosition;
@@ -43,6 +44,8 @@ public class FriendlyController : MonoBehaviour
 
     void Start()
     {
+        gameStateManager = GameStateManager.GetStatic();
+        
         rb = GetComponent<Rigidbody2D>();
         defaultLayer = LayerMask.GetMask("Default");
         shootRoataion = transform.GetChild(0).transform;
@@ -62,6 +65,8 @@ public class FriendlyController : MonoBehaviour
     }
     void Update()
     {
+        if(gameStateManager.isGamePause) return;
+
         var time = Time.time;
 
         if(isHasHit == false && isClash == false)

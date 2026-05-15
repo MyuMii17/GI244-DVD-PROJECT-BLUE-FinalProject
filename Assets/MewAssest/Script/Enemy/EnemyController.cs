@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     private Transform target;
     private LayerMask objectLayer;
     private LayerMask constructionLayer;
+    private GameStateManager gameStateManager;
     private float rangeDistance;
     public Transform shootPosition;
     public Transform shootRoataion;
@@ -42,6 +43,8 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         spawnManager = SpawnManager.GetStatic();
+        gameStateManager = GameStateManager.GetStatic();
+
         rb = GetComponent<Rigidbody2D>();
         cd = GetComponent<Collider2D>();
         objectLayer = LayerMask.GetMask("Object");
@@ -64,6 +67,7 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
+        if(gameStateManager.isGamePause) return;
         if(isHasHit == false  && isClash == false)
         {
             isMoving = true;

@@ -104,6 +104,9 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
+        if(gameStateManager.isGamePause) return;
+
         time = Time.time;
 
         if(isHasHit != true)
