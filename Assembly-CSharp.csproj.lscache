@@ -93,6 +93,7 @@ Assets/MewAssest/UI/
  HealthBar.cs
 Assets/TennisAsset/Scripts/
  Apothecary.cs
+ ApothecaryAdd.cs
  Barrack.cs
  BuildingClass.cs
  Castle.cs
