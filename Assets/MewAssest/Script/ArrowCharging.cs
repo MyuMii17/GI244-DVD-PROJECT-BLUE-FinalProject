@@ -33,10 +33,6 @@ public class ArrowChargingSkill : MonoBehaviour
         if(playerController.isPlayerCharging == true)
         {
             isCanCharging = true;
-            if(OnArrowChargingCoroutine == null)
-            {
-
-            }
         }
         else
         {
